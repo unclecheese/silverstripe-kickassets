@@ -1,111 +1,270 @@
-#kickassets-main {position:absolute;top:40px;left:40px;bottom:40px;right:40px;bottom:40px;overflow:auto;}
-#kickassets-folder-contents li {float:left;width:64px;height:64px;}
-	#kickassets-folder-contents li span {display:block;}
-	#kickassets-folder-contents li span.selected {background:blue;color:white;}
-	#kickassets-folder-contents li img.kickassets-icon {height:100%;width:100%;max-width:128px;max-height:128px;margin:0;}
-  #kickassets-folder-contents li img.kickassets-image {width:100%;}
-	#kickassets-folder-contents li.ui-selected span.kickassets-filename,
-  #kickassets-folder-contents li span.selected {
-    background-color: #338DC1;
-    color:white;
-    background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #338DC1), color-stop(100%, #287099));
-    background-image: -webkit-linear-gradient(#338DC1, #287099);
-    background-image: -moz-linear-gradient(#338DC1, #287099);
-    background-image: -o-linear-gradient(#338DC1, #287099);
-    background-image: linear-gradient(#338DC1, #287099);
+/* @override http://asia/kickassets/css/kickassets.css?m=1359427191 */
+
+#kickassets-main {
+	position: absolute;
+	top: 40px;
+	left: 40px;
+	bottom: 40px;
+	right: 40px;
+	bottom: 40px;
+	overflow: auto;
 }
-  
-.kickassets-actions {position:absolute;top:5px;right:10px;}
+
+#kickassets-folder-contents li {
+	float: left;
+	width: 64px;
+	height: 64px;
+}
+
+#kickassets-folder-contents li span {
+	display: block;
+}
+
+#kickassets-folder-contents li span.selected {
+	background: blue;
+	color: white;
+}
+
+#kickassets-folder-contents li img.kickassets-icon {
+	height: 100%;
+	width: 100%;
+	max-width: 128px;
+	max-height: 128px;
+	margin: 0;
+}
+img#thumbnailImage.thumbnail-preview,
+#kickassets-folder-contents li img.kickassets-image {
+	width: 90%;
+	padding: 5%;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	background: #fff;
+	-webkit-box-shadow: rgba(0,0,0, 0.5) 0 0 4px;
+	-moz-box-shadow: rgba(0,0,0, 0.5) 0 0 4px;
+	box-shadow: rgba(0,0,0, 0.5) 0 0 4px;
+	-webkit-transition: all 0.3s ease; 
+	-moz-transition: all 0.3s ease; 
+	-o-transition: all 0.3s ease; 
+	transition: all 0.3s ease;
+}
+
+#kickassets-folder-contents li img.kickassets-image:hover{
+	background: #efefef;	
+}
+
+
+#kickassets-folder-contents li.ui-selected span.kickassets-filename,
+  #kickassets-folder-contents li span.selected {
+	background-color: #338DC1;
+	color: white;
+	background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #338DC1), color-stop(100%, #287099));
+	background-image: -webkit-linear-gradient(#338DC1, #287099);
+	background-image: -moz-linear-gradient(#338DC1, #287099);
+	background-image: -o-linear-gradient(#338DC1, #287099);
+	background-image: linear-gradient(#338DC1, #287099);
+}
+
+.kickassets-actions {
+	position: absolute;
+	top: 5px;
+	right: 10px;
+}
+
 .kickassets-actions button,
-.kickassets-actions span {float:left;}
+.kickassets-actions span {
+	float: left;
+}
 
-#kickassets-toolbar {position:absolute;bottom:0;left:0;right:0;-webkit-box-shadow: rgba(107, 120, 123, 0.5) 0 0 4px inset;-moz-box-shadow: rgba(107, 120, 123, 0.5) 0 0 4px inset;box-shadow: rgba(107, 120, 123, 0.5) 0 0 4px inset;background:rgb(215,215,215);background-repeat: repeat;padding:8px 16px;z-index:9999;}
-	#kickassets-slider {width:200px;position:absolute;left:64px;top:20px;}
-.kickassets-toolbar-actions {float:right;}
+#kickassets-toolbar {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	-webkit-box-shadow: rgba(107, 120, 123, 0.5) 0 0 4px inset;
+	-moz-box-shadow: rgba(107, 120, 123, 0.5) 0 0 4px inset;
+	box-shadow: rgba(107, 120, 123, 0.5) 0 0 4px inset;
+	background: rgb(215,215,215);
+	background-repeat: repeat;
+	padding: 8px 16px;
+	z-index: 9999;
+}
 
-.kickassets-progress {background:transparent;border:0;}
-.kickassets-progress.processing {background: url(../images/processing.gif) no-repeat center;}
-.kickassets-item {display:none;position:relative;margin:20px 10px;}
-.kickassets-item.placeholder {display:block;opacity:0.1;}
-.kickassets-filename {display:block;border-radius:10px;-moz-border-radius:10px;-webkit-border-radius:10px;white-space:nowrap;overflow:hidden;text-align:center;position:absolute;bottom:-2em;width:100%;padding: 0 2px;}
-.kickassets-icon {position:absolute;top:50%;left:50%;margin-left:-32px;margin-top:-32px;}
-#kickassets-progress-all-wrap > div {position:absolute;left:-9999px;}
-.kickassets-filename.processing {height:1em; background: url(../images/processing.gif) no-repeat center;}
-.kickassets-bulk-action[disabled] {opacity:0.5;}
+#kickassets-slider {
+	width: 200px;
+	position: absolute;
+	left: 64px;
+	top: 20px;
+}
 
+.kickassets-toolbar-actions {
+	float: right;
+}
 
-#kickassets-edit-form {right:0;bottom:40px;top:50px;background:white;width:0;position:fixed;overflow:auto;-moz-box-shadow:-7px 0 20px #888;-webkit-box-shadow:-7px 0 20px #888;box-shadow:-7px 0 20px #888;}
-.kickassets-edit-form-inner {padding:10px 10px 10px 40px;}
+.kickassets-progress {
+	background: transparent;
+	border: 0;
+}
+
+.kickassets-progress.processing {
+	background: url(../images/processing.gif) no-repeat center;
+}
+
+.kickassets-item {
+	display: none;
+	position: relative;
+	margin: 20px 10px;
+}
+
+.kickassets-item.placeholder {
+	display: block;
+	opacity: 0.1;
+}
+
+.kickassets-filename {
+	display: block;
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-align: center;
+	position: absolute;
+	bottom: -2em;
+	width: 100%;
+	padding: 0 2px;
+}
+
+.kickassets-icon {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-left: -32px;
+	margin-top: -32px;
+}
+
+#kickassets-progress-all-wrap > div {
+	position: absolute;
+	left: -9999px;
+}
+
+.kickassets-filename.processing {
+	height: 1em;
+	background: url(../images/processing.gif) no-repeat center;
+}
+
+.kickassets-bulk-action[disabled] {
+	opacity: 0.5;
+}
+
+#kickassets-edit-form {
+	right: 0;
+	bottom: 40px;
+	top: 50px;
+	background: white;
+	width: 0;
+	position: fixed;
+	overflow: auto;
+	-moz-box-shadow: -7px 0 20px #888;
+	-webkit-box-shadow: -7px 0 20px #888;
+	box-shadow: -7px 0 20px #888;
+}
+
+.kickassets-edit-form-inner {
+	padding: 10px 10px 10px 40px;
+}
+
+#Root_Main {
+		border: none;
+}
+
+.kickassets-edit-form-inner #Root .ui-tabs-nav {
+	display: none;
+}
 
 .fileinput-button {
-  position: relative;
-  overflow: hidden;
-  float: left;
-  margin-right: 4px;
+	position: relative;
+	overflow: hidden;
+	float: left;
+	margin-right: 4px;
 }
+
 .fileinput-button input {
-  position: absolute;
-  top: 0;
-  right: 0;
-  margin: 0;
-  opacity: 0;
-  filter: alpha(opacity=0);
-  transform: translate(-300px, 0) scale(4);
-  font-size: 23px;
-  direction: ltr;
-  cursor: pointer;
+	position: absolute;
+	top: 0;
+	right: 0;
+	margin: 0;
+	opacity: 0;
+	filter: alpha(opacity=0);
+	transform: translate(-300px, 0) scale(4);
+	font-size: 23px;
+	direction: ltr;
+	cursor: pointer;
 }
+
 .fileupload-buttonbar .btn,
 .fileupload-buttonbar .toggle {
-  margin-bottom: 5px;
+	margin-bottom: 5px;
 }
+
 .files .progress {
-  width: 200px;
+	width: 200px;
 }
+
 .progress-animated .bar {
-  background: url(../img/progressbar.gif) !important;
-  filter: none;
+	background: url(../img/progressbar.gif) !important;
+	filter: none;
 }
+
 .fileupload-loading {
-  position: absolute;
-  left: 50%;
-  width: 128px;
-  height: 128px;
-  background: url(../img/loading.gif) center no-repeat;
-  display: none;
+	position: absolute;
+	left: 50%;
+	width: 128px;
+	height: 128px;
+	background: url(../img/loading.gif) center no-repeat;
+	display: none;
 }
+
 .fileupload-processing .fileupload-loading {
-  display: block;
+	display: block;
 }
 
 /* Fix for IE 6: */
+
 * html .fileinput-button {
-  line-height: 24px;
-  margin: 1px -3px 0 0;
+	line-height: 24px;
+	margin: 1px -3px 0 0;
 }
 
 /* Fix for IE 7: */
+
 * + html .fileinput-button {
-  padding: 2px 15px;
-  margin: 1px 0 0 0;
+	padding: 2px 15px;
+	margin: 1px 0 0 0;
 }
 
 @media (max-width: 767px) {
-  .files .btn span {
-    display: none;
-  }
-  .files .preview * {
-    width: 40px;
-  }
-  .files .name * {
-    width: 80px;
-    display: inline-block;
-    word-wrap: break-word;
-  }
-  .files .progress {
-    width: 20px;
-  }
-  .files .delete {
-    width: 60px;
-  }
+
+.files .btn span {
+	display: none;
+}
+
+.files .preview * {
+	width: 40px;
+}
+
+.files .name * {
+	width: 80px;
+	display: inline-block;
+	word-wrap: break-word;
+}
+
+.files .progress {
+	width: 20px;
+}
+
+.files .delete {
+	width: 60px;
+}
+
 }

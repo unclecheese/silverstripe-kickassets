@@ -15,3 +15,4 @@ es:
 # Output for class or file: Kickassets
   Kickassets:
     ADDFILES: "Agregar archivo(s)"
+    MENUTITLE: "Archivos e Imágenes"

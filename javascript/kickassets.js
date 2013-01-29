@@ -67,7 +67,7 @@ $('#kickassets').entwine({
 			cancel: "[contenteditable], #kickassets-edit-form",
 			filter : '.kickassets-item',
 			selected : function() {	
-				self.toggleSelection($('.ui-selected').length > 1);
+				self.toggleSelection($('.ui-selected').length > 0);
 			},
 			unselected : function() {
 				self.toggleSelection(false);
@@ -350,7 +350,7 @@ $('.kickassets-item img').entwine({
 		$(this).closest('li').setSelected(true);
 		var items = this.getContainer().getList().getSelectedItems();
 		if(items.length) {
-			this.getContainer().toggleSelection(items.length > 1);
+			this.getContainer().toggleSelection(items.length > 0);
 		}
 		else {
 			this.getContainer().toggleSelection(false);

@@ -173,11 +173,9 @@ img#thumbnailImage.thumbnail-preview,
 .kickassets-edit-form-inner {
 	padding: 10px 10px 10px 40px;
 }
-
-#Root_Main {
-		border: none;
+.kickassets-edit-form-inner #Root_Main{
+	border: none;
 }
-
 .kickassets-edit-form-inner #Root .ui-tabs-nav {
 	display: none;
 }

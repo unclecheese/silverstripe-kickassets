@@ -1,0 +1,17 @@
+en:
+  
+# Output for class or file: AssetAdmin
+  AssetAdmin:
+    NEWFOLDER: "NewFolder"
+  
+# Output for class or file: KickAssets
+  KickAssets:
+    SAVE: "Save"
+    CANCEL: "Cancel"
+    FILEUPDATED: "File updated"
+    NEWFOLDER: "New folder"
+    DELETESELECTED: "Delete selected"
+  
+# Output for class or file: Kickassets
+  Kickassets:
+    ADDFILES: "Add file(s)"

@@ -167,7 +167,7 @@ class KickAssets extends LeftAndMain {
 		$record->Name = $record->Title = basename($record->Filename);
 		
 		mkdir($record->FullPath);
-		chmod($record->FullPath, Filesystem::$file_create_mask);
+		chmod($record->FullPath, Config::inst()->get('Filesystem','file_create_mask'));
 
 		return new SS_HTTPResponse($record->write());
 	}
@@ -208,7 +208,7 @@ class KickAssets extends LeftAndMain {
 		$destination = Folder::get()->byId((int) $r->param('ID'));
 		if(!$destination) {
 			$path = false;
-			Upload::$uploads_folder = "";
+			Config::inst()->update('Upload', 'uploads_folder', '');
 		}
 		else {
 			$path = preg_replace('/^'.ASSETS_DIR.'/','', $destination->Filename);
@@ -250,7 +250,7 @@ class KickAssets extends LeftAndMain {
 			'doc' => 'doc',
 			'docx' => 'doc'
 		);
-		foreach(File::$app_categories as $cat => $exts) {
+		foreach(Config::inst()->get('File','app_categories') as $cat => $exts) {
 			foreach($exts as $ext) {
 				$json[$ext] = $cat;
 			}

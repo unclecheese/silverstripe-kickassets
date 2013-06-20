@@ -1,0 +1,17 @@
+fi:
+  
+# Output for class or file: AssetAdmin
+  AssetAdmin:
+    NEWFOLDER: "Uusi kansio"
+  
+# Output for class or file: KickAssets
+  KickAssets:
+    SAVE: "Talenna"
+    CANCEL: "Peruuta"
+    FILEUPDATED: "Tiedosto päivitetty"
+    NEWFOLDER: "Uusi kansio"
+    DELETESELECTED: "Poista valittu"
+  
+# Output for class or file: Kickassets
+  Kickassets:
+    ADDFILES: "Lisää tiedosto(ja)"

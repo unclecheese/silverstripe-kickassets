@@ -13,33 +13,33 @@ class KickAssets extends LeftAndMain {
 		'getplaceholders'
 	);
 
-	static $url_segment = "files";
+	private static $url_segment = "files";
 
 
 
-	static $menu_title = "Browse files";
-
-
-	
-	static $menu_priority = 9;
+	private static $menu_title = "Browse files";
 
 
 	
-	static $url_priority = 30;
+	private static $menu_priority = 9;
+
+
+	
+	private static $url_priority = 30;
 
 	
 	
-	static $menu_icon = "framework/admin/images/menu-icons/16x16/picture.png";	
+	private static $menu_icon = "framework/admin/images/menu-icons/16x16/picture.png";	
 
 
 
-	static $icons = array (
+	private static $icons = array (
 
 	);
 
 
 
-	static $url_handlers = array (
+	private static $url_handlers = array (
 		'editkickassetsfile/$ID' => 'handleEdit'
 	);
 

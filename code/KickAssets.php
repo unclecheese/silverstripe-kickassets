@@ -21,7 +21,7 @@ class KickAssets extends LeftAndMain {
 
 
 	
-	static $menu_priority = 100;
+	static $menu_priority = 9;
 
 
 	

@@ -3,7 +3,15 @@
 
 class KickAssets extends LeftAndMain {
 	
-
+	private static $allowed_actions = array(
+		'browse',
+		'deleteitems',
+		'moveitems',
+		'newfolder',
+		'updateitem',
+		'upload',
+		'getplaceholders'
+	);
 
 	static $url_segment = "files";
 

@@ -2,7 +2,7 @@
 
 
 class KickAssets extends LeftAndMain {
-	
+
 
 
 	static $url_segment = "files";
@@ -12,16 +12,16 @@ class KickAssets extends LeftAndMain {
 	static $menu_title = "Browse files";
 
 
-	
-	static $menu_priority = 100;
+
+	static $menu_priority = 0;
 
 
-	
+
 	static $url_priority = 30;
 
-	
-	
-	static $menu_icon = "framework/admin/images/menu-icons/16x16/picture.png";	
+
+
+	static $menu_icon = "framework/admin/images/menu-icons/16x16/picture.png";
 
 
 
@@ -36,6 +36,19 @@ class KickAssets extends LeftAndMain {
 	);
 
 
+	static $allowed_actions = array (
+		'browse',
+		'getplaceholders',
+		'editkickassetsfile',
+		'deleteitems',
+		'newfolder',
+		'updateitem',
+		'moveitems',
+		'upload',
+		'handleEdit'
+	);
+
+
 
 	protected $currentFolder;
 
@@ -43,7 +56,7 @@ class KickAssets extends LeftAndMain {
 
 
 	public function init() {
-		parent::init();		
+		parent::init();
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-fileupload/jquery.iframe-transport.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-fileupload/cors/jquery.xdr-transport.js');
 
@@ -64,7 +77,7 @@ class KickAssets extends LeftAndMain {
 
 
 
-	public function index($request) {		
+	public function index($request) {
 		return $this->redirect($this->Link("browse/".ASSETS_DIR));
 	}
 
@@ -75,47 +88,47 @@ class KickAssets extends LeftAndMain {
 	public function browse(SS_HTTPRequest $request) {
 		$child  = null;
 		$previous = $request->param('ID');
-		$next = $request->param('OtherID');		
+		$next = $request->param('OtherID');
 		if($previous == ASSETS_DIR) {
 			$this->currentFolder = $this->createRootFolder();
 		}
 
-		if(!$next) {	
+		if(!$next) {
 			if($request->isAjax()) {
 				if($request->getVar('refresh')) {
 					$content = $this->renderWith('FolderContents');
 				}
-				else {	
+				else {
 					$content = $this->renderWith($this->getTemplatesWithSuffix('_Content'));
 				}
 			} else {
 				$content = $this->renderWith($this->getViewer('browse'));
 			}
 			return $content;
-		}		
-		
+		}
+
 		$parentID = $this->currentFolder->ID;
 		$child = Folder::get()->filter(array(
 			'Name' => $next,
 			'ParentID' => $parentID
 		))->first();
-		if($child) {			
+		if($child) {
 			$this->currentFolder = $child;
 			$request->shiftAllParams();
 			$request->shift();
 			return $this->browse($request);
 		}
 		die("Couldn't find \"$next\" under folder {$this->currentFolder->Name}");
-		
-	
-		
+
+
+
 	}
 
 
 
 	public function handleEdit(SS_HTTPRequest $r) {
 		if($file = File::get()->byID($r->param('ID'))) {
-			return KickAssets_FileRequest::create($file)->handleRequest($r, DataModel::inst());	
+			return KickAssets_FileRequest::create($file)->handleRequest($r, DataModel::inst());
 		}
 		return $this->httpError(404);
 	}
@@ -138,7 +151,7 @@ class KickAssets extends LeftAndMain {
 	public function newfolder(SS_HTTPRequest $r) {
 		if(!singleton("Folder")->canCreate()) return Security::permissionFailure($this);
 
-		$parentID = (int) $r->param('ID');		
+		$parentID = (int) $r->param('ID');
 		$parentRecord = Folder::get()->byID($parentID);
 		$name =_t('AssetAdmin.NEWFOLDER',"NewFolder");
 
@@ -146,7 +159,7 @@ class KickAssets extends LeftAndMain {
 			$filename = $parentRecord->FullPath . $name;
 		}
 		else $filename = ASSETS_PATH . '/' . $name;
-		
+
 
 		$record = Folder::create(array(
 			'ParentID' => $parentID,
@@ -156,16 +169,16 @@ class KickAssets extends LeftAndMain {
 		));
 
 
-		// Ensure uniqueness		
+		// Ensure uniqueness
 		$i = 2;
 		$baseFilename = substr($record->Filename, 0, -1) . '-';
 		while(file_exists($record->FullPath)) {
 			$record->Filename = $baseFilename . $i . '/';
 			$i++;
 		}
-		
+
 		$record->Name = $record->Title = basename($record->Filename);
-		
+
 		mkdir($record->FullPath);
 		chmod($record->FullPath, Config::inst()->get('Filesystem','file_create_mask'));
 
@@ -220,7 +233,7 @@ class KickAssets extends LeftAndMain {
 				$files[$i][$k] = $file;
 			}
 		}
-		
+
 		foreach($files as $tmpFile) {
 			if(preg_match('/^image\//', $tmpFile['type'])) {
 				$o = Image::create();
@@ -228,8 +241,8 @@ class KickAssets extends LeftAndMain {
 			else {
 				$o = File::create();
 			}
-			Upload::create()->loadIntoFile($tmpFile, $o, $path);		
-		}		
+			Upload::create()->loadIntoFile($tmpFile, $o, $path);
+		}
 
 	}
 
@@ -288,7 +301,7 @@ class KickAssets extends LeftAndMain {
 		return Folder::create(array(
 			'ID' => 0,
 			'Name' => ASSETS_DIR
-		));			
+		));
 	}
 
 
@@ -305,6 +318,12 @@ class KickAssets extends LeftAndMain {
 
 
 class KickAssets_FileRequest extends RequestHandler {
+
+	static $allowed_actions = array (
+		'EditForm',
+		'doFileSave'
+	);
+
 
 	protected $file;
 

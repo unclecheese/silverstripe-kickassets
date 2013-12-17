@@ -1,7 +1,7 @@
 <?php
 
 
-class KickAssets extends LeftAndMain {
+class KickAssets extends LeftAndMain implements PermissionProvider {
 
 
 
@@ -180,7 +180,7 @@ class KickAssets extends LeftAndMain {
 		$record->Name = $record->Title = basename($record->Filename);
 
 		mkdir($record->FullPath);
-		chmod($record->FullPath, Config::inst()->get('Filesystem','file_create_mask'));
+		@chmod($record->FullPath, Config::inst()->get('Filesystem','file_create_mask'));
 
 		return new SS_HTTPResponse($record->write());
 	}
@@ -311,7 +311,9 @@ class KickAssets extends LeftAndMain {
 	}
 
 
-
+	public function canView($member = null) {
+		return Permission::check("CMS_ACCESS_CMSMain");
+	}
 
 }
 

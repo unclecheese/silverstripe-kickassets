@@ -242,6 +242,9 @@ class KickAssets extends LeftAndMain implements PermissionProvider {
 				$o = File::create();
 			}
 			Upload::create()->loadIntoFile($tmpFile, $o, $path);
+			if($o instanceof Image) {
+				$o->deleteFormattedImages();
+			}
 		}
 
 	}
@@ -374,6 +377,10 @@ class KickAssets_FileRequest extends RequestHandler {
 	public function doFileSave($data, $form) {
 		$form->saveInto($this->file);
 		$this->file->write();
+
+		if($this->file instanceof Image) {
+			$this->file->deleteFormattedImages();
+		}
 		return new SS_HTTPResponse(_t('KickAssets.FILEUPDATED','File updated'));
 	}
 }

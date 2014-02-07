@@ -3,40 +3,38 @@
 
 class KickAssets extends LeftAndMain implements PermissionProvider {
 
-
-
-	static $url_segment = "files";
-
-
-
-	static $menu_title = "Browse files";
+	private static $url_segment = "files";
 
 
 
-	static $menu_priority = 0;
+	private static $menu_title = "Browse files";
 
 
 
-	static $url_priority = 30;
+	private static $menu_priority = 0;
 
 
 
-	static $menu_icon = "framework/admin/images/menu-icons/16x16/picture.png";
+	private static $url_priority = 30;
 
 
 
-	static $icons = array (
+	private static $menu_icon = "framework/admin/images/menu-icons/16x16/picture.png";
+
+
+
+	private static $icons = array (
 
 	);
 
 
 
-	static $url_handlers = array (
+	private static $url_handlers = array (
 		'editkickassetsfile/$ID' => 'handleEdit'
 	);
 
 
-	static $allowed_actions = array (
+	private static $allowed_actions = array (
 		'browse',
 		'getplaceholders',
 		'editkickassetsfile',

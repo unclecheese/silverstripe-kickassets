@@ -6,10 +6,14 @@ class KickAssetsFolder extends DataExtension {
 
 
 	public function ChildFiles() {
-		$files = File::get()->filter(array(
-			'ParentID' => $this->owner->ID,
-			'ClassName:not' => 'Folder'
-		));
+		$files = File::get()
+			->filter(array(
+				'ParentID' => $this->owner->ID			
+			))
+			->exclude(array(
+				'ClassName' => 'Folder'
+			))
+		;
 
 		$set = ArrayList::create(array());
 		foreach($files as $file) {

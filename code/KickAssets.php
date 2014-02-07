@@ -3,17 +3,6 @@
 
 class KickAssets extends LeftAndMain implements PermissionProvider {
 
-
-	private static $allowed_actions = array(
-		'browse',
-		'deleteitems',
-		'moveitems',
-		'newfolder',
-		'updateitem',
-		'upload',
-		'getplaceholders'
-	);
-
 	private static $url_segment = "files";
 
 

@@ -1,0 +1,21 @@
+de:
+
+# Output for class or file: AssetAdmin
+  AssetAdmin:
+    NEWFOLDER: "Neuer Ordner"
+
+# Output for class or file: KickAssets
+  KickAssets:
+    SAVE: "Speichern"
+    CANCEL: "Abbrechen"
+    FILEUPDATED: "Datei aktualisiert"
+    NEWFOLDER: "Neuer Ordner"
+    DELETESELECTED: "Gewählte löschen"
+# Added to enable i18n for static $menu_title within KickAssets.php
+# see http://doc.silverstripe.org/framework/en/howto/customize-cms-menu    
+    MENUTITLE: "Dateien"
+
+# Output for class or file: Kickassets (template)
+  Kickassets:
+    ADDFILES: "Datei(en) hinzufügen"
+    BROWSEFILES: "Dateien"

@@ -4,7 +4,7 @@
 			<h2>
 				<div class="breadcrumbs-wrapper" data-pjax-fragment="Breadcrumbs">
 					<span class="section-icon icon icon-16 icon-{$MenuCurrentItem.Code.LowerCase}"></span>
-					<span class="cms-panel-link crumb last">Browse Files</span>:					
+					<span class="cms-panel-link crumb last"><% _t('KickAssets.BROWSEFILES', 'Browse Files') %></span>:					
 					<% loop FolderBreadcrumbs %>
 						<% if Last %>
 							<span class="cms-panel-link crumb last">$Name</span>

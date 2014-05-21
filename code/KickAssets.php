@@ -318,6 +318,15 @@ class KickAssets extends LeftAndMain implements PermissionProvider {
 		return Permission::check("CMS_ACCESS_CMSMain");
 	}
 
+	public function Link($action = null) {
+		$link = parent::Link($action);
+		if (strpos($link, "?locale=") > 0) {
+			$link = preg_replace("/\?locale=([A-Za-z_]+)/", "", $link);
+		}
+
+		return $link;
+	}
+
 }
 
 

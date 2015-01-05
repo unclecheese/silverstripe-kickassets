@@ -212,6 +212,19 @@ class KickAssets extends LeftAndMain implements PermissionProvider {
 				return new SS_HTTPResponse("OK");
 			}
 		}
+		
+		/* moving into home directory */
+		if($r->requestVar('destination') == 0) {
+			if(is_array($r->requestVar('items'))) {
+				foreach($r->requestVar('items') as $id) {
+					if($item = File::get()->byID((int) $id)) {
+						$item->ParentID = 0;
+						$item->write();
+					}
+				}
+				return new SS_HTTPResponse("OK");
+			}
+		}
 	}
 
 

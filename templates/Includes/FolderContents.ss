@@ -1,4 +1,30 @@
 	<ul id="kickassets-folder-contents">	
+	
+	<% if isRoot %>	
+	<% else %>
+		<% if $CurrentFolder.Parent.ID = 0 %>
+		
+			<li class="kickassets-item kickassets-folder"  data-update-url="admin/files/updateitem/0" data-id="$CurrentFolder.Parent.ID">
+				<a class="" href="admin/files/browse/assets/" >
+					<img class="kickassets-icon" src="kickassets/images/icons/arrow-up-grey.png" />
+				</a>	
+				<span class="kickassets-filename">Up</a>			
+			</li>
+		
+		<% else %>
+			
+			<li class="kickassets-item kickassets-folder"  data-update-url="$CurrentFolder.Parent.UpdateLink " data-id="$CurrentFolder.Parent.ID">
+				<a class="" href="$CurrentFolder.Parent.BrowseLink " >
+					<img class="kickassets-icon" src="kickassets/images/icons/arrow-up-grey.png" />
+				</a>	
+				<span class="kickassets-filename">Up</a>			
+			</li>
+		
+		<% end_if %>
+	<% end_if %>
+	
+	
+	
 	<% if CurrentFolder.Name %>
 		<% with CurrentFolder %>			
 			<% if ChildFolders %>

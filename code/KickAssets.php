@@ -120,7 +120,7 @@ class KickAssets extends LeftAndMain {
 		Requirements::add_i18n_javascript(KICKASSETS_DIR.'/lang');
 		$js = $this->config()->js_file;
 
-    	Requirements::javascript(KICKASSETS_DIR."/javascript/build/$js");
+    		Requirements::javascript(KICKASSETS_DIR."/javascript/build/$js");
 		Requirements::clear_combined_files();		
 	}
 
@@ -166,10 +166,10 @@ class KickAssets extends LeftAndMain {
 		);
 				
 		$files = File::get()
-					->filter(array(
-						'ParentID' => $folder->ID
-				 	))
-				 	->sort($this->getSortClause($r->getVar('sort')));				 	
+			->filter(array(
+				'ParentID' => $folder->ID
+			))
+			->sort($this->getSortClause($r->getVar('sort')));				 	
 		
 		$totalFiles = (int) $files->count();		
 		$files = $files->limit($this->config()->folder_items_limit, $cursor);
@@ -178,8 +178,8 @@ class KickAssets extends LeftAndMain {
 			if(!$file->canView()) continue;
 			
 			$result['children'][] = ($file instanceof Folder) ? 
-									$this->createFolderJSON($file) : 
-									$this->createFileJSON($file, $folder);			
+						$this->createFolderJSON($file) : 
+						$this->createFileJSON($file, $folder);			
 		}
 
 		$cursor += $files->count();
@@ -187,9 +187,9 @@ class KickAssets extends LeftAndMain {
 		$result['has_more'] = ($cursor < $totalFiles);		
 		$result['total_items'] = $totalFiles;
 
-    	return (new SS_HTTPResponse(
-    		Convert::array2json($result), 200
-    	))->addHeader('Content-Type', 'application/json');
+    		return (new SS_HTTPResponse(
+    			Convert::array2json($result), 200
+    		))->addHeader('Content-Type', 'application/json');
 
 	}
 
@@ -203,9 +203,9 @@ class KickAssets extends LeftAndMain {
 		$result = array ();
 
 		$fileIDs = File::get()
-				 	->sort('LastEdited', 'DESC')
-				 	->limit($this->config()->recent_items_limit)
-				 	->column('ID');				 	
+			->sort('LastEdited', 'DESC')
+			->limit($this->config()->recent_items_limit)
+			->column('ID');				 	
 		
 		if(!empty($fileIDs)) {
 			$files = File::get()
@@ -216,15 +216,15 @@ class KickAssets extends LeftAndMain {
 				if(!$file->canView()) continue;
 				
 				$result[] = ($file instanceof Folder) ? 
-								$this->createFolderJSON($file) : 
-								$this->createFileJSON($file);
+					$this->createFolderJSON($file) : 
+					$this->createFileJSON($file);
 				
 			}
 		}
 
-    	return (new SS_HTTPResponse(
-    		Convert::array2json($result), 200
-    	))->addHeader('Content-Type', 'application/json');
+    		return (new SS_HTTPResponse(
+    			Convert::array2json($result), 200
+    		))->addHeader('Content-Type', 'application/json');
 	}
 
 	/**

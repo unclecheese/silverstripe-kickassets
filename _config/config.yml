@@ -1,0 +1,27 @@
+---
+Name: kickassets
+---
+KickAssets:
+  folder_items_limit: 100
+  recent_items_limit: 50
+  default_sort: 'newest'
+  default_view: 'grid'
+  max_cache_size: 500000  
+Image:
+  extensions:
+    - KickAssetsImage
+LeftAndMain:
+  extra_requirements_css: ['kickassets/css/kickassets-cms.css']
+  extra_requirements_javascript: ['kickassets/javascript/kickassets-cms.js']
+---
+Only:
+  environment: dev
+---
+KickAssets:
+  js_file: bundle.js
+---
+Except:
+  environment: dev
+---
+KickAssets:
+  js_file: bundle.min.js

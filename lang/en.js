@@ -1,0 +1,51 @@
+if(typeof(ss) == 'undefined' || typeof(ss.i18n) == 'undefined') {
+	if(typeof(console) != 'undefined') console.error('Class ss.i18n not defined');
+} 
+else {
+	ss.i18n.addDictionary('en', {
+		'Kickassets.ADDFILES': 'Add files...',
+		'KickAssets.DIDNTWORK': 'Well, that didn\'t work.',
+		'KickAssets.FILETOOBIG': 'File is too big. (%sMB). Max size: %sMB',
+		'KickAssets.INVALIDFILETYPE': 'Invalid file type',
+		'KickAssets.TOOMANYFILES': 'Too many files. Upload no more than %s',
+		'KickAssets.MOVEITEMSTO': 'Move %s item(s) to:',
+		'KickAssets.FOLDERNOTEXIST': 'This folder does not exist. It will be created.',
+		'KickAssets.MOVEITEMS': 'Move %s items',
+		'KickAssets.SEARCHFOR': 'Search for %s',
+        'KickAssets.GENERICERROR': '<p>You may have found a bug.</p><p>If you have discovered a problem with this module, <a href=\"http://github.com/unclecheese/silverstripe-kickassets\">post an issue on the Github page.</a></p>',
+		'KickAssets.SORTTITLEAZ': 'Title: A-Z',
+		'KickAssets.SORTTITLEZA': 'Title Z-A',
+		'KickAssets.SORTOLDEST': 'Oldest',
+		'KickAssets.SORTNEWEST': 'Newest',
+		'KickAssets.SORTLASTUPDATED': 'Last updated',
+		'KickAssets.SORTKIND': 'Kind',
+		'KickAssets.SORTKIND': 'Kind',
+		'KickAssets.LOADINGRESULTS': 'Loading results...',
+		'KickAssets.JUMPTOFOLDER': 'Jump to folder...',
+		'KickAssets.NEWFOLDER': 'New folder',
+		'KickAssets.UPLOADFILES': 'Upload files...',
+		'KickAssets.FILE': 'File',
+		'KickAssets.DOWNLOAD':  'Download',
+		'KickAssets.OK': 'OK',
+		'KickAssets.ADDED': 'Added',
+		'KickAssets.OHNO': 'Oh no!',
+		'KickAssets.EDIT': 'Edit',
+		'KickAssets.MOVETO': 'Move to...',
+		'KickAssets.DELETE': 'Delete',
+		'KickAssets.JUSTNOW': 'Just now',
+		'KickAssets.LOADING': 'Loading...',
+		'KickAssets.LOADMORE': 'Load more',
+		'KickAssets.TITLE': 'Title',
+		'KickAssets.FILENAME': 'Filename',
+		'KickAssets.FOLDER': 'Folder',
+		'KickAssets.UNTITLED': 'Untitled',
+		'KickAssets.SAVE': 'Save',
+		'KickAssets.SAVING': 'Saving...',
+		'KickAssets.SAVED': 'Saved!',
+		'KickAssets.SEARCHFILES': 'Search files',
+		'KickAssets.BROWSEFILES': 'Browse files',
+		'KickAssets.MOSTRECENT': 'Most recent',
+		'KickAssets.DONE': 'Done'
+
+	});
+}

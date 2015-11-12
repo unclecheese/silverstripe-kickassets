@@ -1,5 +1,5 @@
 {
-    "name": "unclecheese/kickassets",
+    "name": "unclecheese/silverstripe-kickassets",
     "description": "Provides an alternative file management interface for SilverStripe CMS with drag-and-drop, multi-selection, and several other desktop-like UI conventions.",
     "type": "silverstripe-module",
     "keywords": ["silverstripe", "assets", "files", "AssetAdmin", "upload"],
@@ -12,12 +12,16 @@
     ],
     "require":
     {
-        "silverstripe/framework": "3.*",
-	    "silverstripe/cms": "3.*"
+        "silverstripe/framework": ">= 3.1.0",
+	    "silverstripe/cms": ">= 3.1.0",
+	    "unclecheese/dropzone": "1.1.*"
     },
     "extra": {
-	"installer-name": "kickassets"
+		"installer-name": "kickassets"
     },
-    "replace": {"silverstripe/kickassets": "*"}
+    "replace": {
+    	"unclecheese/kickassets": "*",
+    	"silverstripe/kickassets": "*"
+    }
     
 }

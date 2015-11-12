@@ -1,159 +1,245 @@
 <?php
 
+/**
+ * API for the KickAssets UI. Although this is a subclass of LeftAndMain,
+ * there is no LeftAndMain template for it. Rather, it is just a backend,
+ * and LeftAndMain is inherited to provide consistentcy, i.e. with permissions
+ */
+class KickAssets extends LeftAndMain {
 
-class KickAssets extends LeftAndMain implements PermissionProvider {
+	/**
+	 * The size of the generic file icons, in pixels
+	 * 
+	 * @var int 
+	 */
+	const ICON_SIZE = 64;
 
+	/**
+	 * The width of images, in pixels
+	 * 
+	 * @var int 
+	 */
+	const IMAGE_WIDTH = 198;
 
+	/**
+	 * The height of images, in pixels
+	 * 
+	 * @var int 
+	 */
+	const IMAGE_HEIGHT = 132;
 
-	static $url_segment = "files";
+	/**
+	 * The fake extension to use for folders, in order to get them sorted first.
+	 * 
+	 * @var string
+	 */
+	const FOLDER_EXTENSION = ' ';
 
+	/**
+	 * The title for the menu in the left panel
+	 * 
+	 * @var string
+	 */
+	private static $menu_title = 'Browse files...';
 
+	/**
+	 * The URLSegment that resolves to KickAssets admin
+	 * 
+	 * @var string
+	 */
+	private static $url_segment = 'kickassets';
 
-	static $menu_title = "Browse files";
-
-
-
-	static $menu_priority = 0;
-
-
-
-	static $url_priority = 30;
-
-
-
-	static $menu_icon = "framework/admin/images/menu-icons/16x16/picture.png";
-
-
-
-	static $icons = array (
-
+	/**
+	 * URL handlers for various endpoints
+	 * 
+	 * @var array
+	 */
+	private static $url_handlers = array (
+		'GET folder/$FolderID' => 'handleFolderContents',
+		'GET recent' => 'handleRecentItems',
+		'POST folder' => 'handleCreateFolder',
+		'GET folders' => 'handleFolders',
+		'PUT move' => 'handleMove',
+		'upload/$FolderID' => 'handleUpload',
+		'file/$FileID' => 'handleFile',
+		'GET $Action/$ID/$OtherID' => 'handleIndex',		
+		'DELETE ' => 'handleDelete',
+		'GET ' => 'handleIndex'		
 	);
 
-
-
-	static $url_handlers = array (
-		'editkickassetsfile/$ID' => 'handleEdit'
+	/**
+	 * Allowed actions for endpoints
+	 * 
+	 * @var array
+	 */
+	private static $allowed_actions = array (
+		'handleFolderContents',
+		'handleRecentItems',
+		'handleCreateFolder',
+		'handleFolders',
+		'handleFile',
+		'handleIndex',
+		'handleUpload',
+		'handleDelete',
+		'handleSearch',
+		'handleMove',
 	);
 
+	/**
+	 * Strips the assets directory from the beginning of a folder name
+	 * 
+	 * @param  string $filename
+	 * @return string
+	 */
+	public static function remove_assets_dir($filename) {
+		return preg_replace('/^'.ASSETS_DIR.'\//', '', $filename);
+	}
 
-	static $allowed_actions = array (
-		'browse',
-		'getplaceholders',
-		'editkickassetsfile',
-		'deleteitems',
-		'newfolder',
-		'updateitem',
-		'moveitems',
-		'upload',
-		'handleEdit'
-	);
+	/**
+	 * Defines the canView permission
+	 * 
+	 * @param  Member $member
+	 * @return bool
+	 */
+	public function canView($member = null) {
+		if(!$member && $member !== FALSE) $member = Member::currentUser();
+				
+		if(!$member) return false;
+				
+		return Permission::checkMember($member, "CMS_ACCESS_AssetAdmin");
+	}	
 
-
-
-	protected $currentFolder;
-
-
-
-
-	public function init() {
+	/**
+	 * Bootstraps the module, adds JavaScript
+	 */
+	public function init() {	
 		parent::init();
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery-fileupload/jquery.iframe-transport.js');
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery-fileupload/cors/jquery.xdr-transport.js');
 
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery-fileupload/jquery.fileupload.js');
-//		Requirements::javascript(THIRDPARTY_DIR . '/jquery-fileupload/jquery.fileupload-ui.js');
+		Requirements::clear();
+		Requirements::css(KICKASSETS_DIR.'/javascript/build/main.css');
+		Requirements::add_i18n_javascript(KICKASSETS_DIR.'/lang');
+		$js = $this->config()->js_file;
 
-		Requirements::css("kickassets/css/kickassets.css");
-		Requirements::javascript("kickassets/javascript/progress.js");
-		Requirements::javascript("kickassets/javascript/kickassets.js");
-
-		if(!file_exists(ASSETS_PATH)) {
-			Filesystem::makeFolder(ASSETS_PATH);
-		}
-
-		Config::inst()->update("File","default_sort","Created ASC");
+    	Requirements::javascript(KICKASSETS_DIR."/javascript/build/$js");
+		Requirements::clear_combined_files();		
 	}
 
-
-
-
-	public function index($request) {
-		return $this->redirect($this->Link("browse/".ASSETS_DIR));
-	}
-
-
-
-
-
-	public function browse(SS_HTTPRequest $request) {
-		$child  = null;
-		$previous = $request->param('ID');
-		$next = $request->param('OtherID');
-		if($previous == ASSETS_DIR) {
-			$this->currentFolder = $this->createRootFolder();
+	/**
+	 * Index action, renders the main template
+	 * 
+	 * @param  SS_HTTPRequest $request
+	 * @return SSViewer
+	 */
+	public function handleIndex($r) {		
+		if($r->getVar('search') !== null) {			
+			return $this->handleSearch($r);
 		}
 
-		if(!$next) {
-			if($request->isAjax()) {
-				if($request->getVar('refresh')) {
-					$content = $this->renderWith('FolderContents');
-				}
-				else {
-					$content = $this->renderWith($this->getTemplatesWithSuffix('_Content'));
-				}
-			} else {
-				$content = $this->renderWith($this->getViewer('browse'));
+		return $this->renderWith('KickAssets');
+	}
+
+	/**
+	 * Gets the contents of a folder, and applies a sort. Splits the response
+	 * into folder metadata and folder children
+	 * 
+	 * @param  SS_HTTPRequest $r
+	 * @return SS_HTTPResponse
+	 */
+	public function handleFolderContents(SS_HTTPRequest $r) {
+		if(!$r->param('FolderID')) {
+			$folder = Injector::inst()->get('Folder');
+			$folder->Filename = ASSETS_DIR;
+		}
+		else {
+			$folder = Folder::get()->byID($r->param('FolderID'));
+		}
+
+		if(!$folder) {
+			return $this->httpError(404, 'That folder does not exist');
+		}
+
+		$cursor = (int) $r->getVar('cursor');
+		$result = array (
+			'folder' => $this->createFolderJSON($folder),
+			'breadcrumbs' => $this->createBreadcrumbJSON($folder),
+			'children' => array ()
+		);
+				
+		$files = File::get()
+					->filter(array(
+						'ParentID' => $folder->ID
+				 	))
+				 	->sort($this->getSortClause($r->getVar('sort')));				 	
+		
+		$totalFiles = (int) $files->count();		
+		$files = $files->limit($this->config()->folder_items_limit, $cursor);
+		
+		foreach($files as $file) {
+			if(!$file->canView()) continue;
+			
+			$result['children'][] = ($file instanceof Folder) ? 
+									$this->createFolderJSON($file) : 
+									$this->createFileJSON($file, $folder);			
+		}
+
+		$cursor += $files->count();
+		$result['cursor'] = $cursor;
+		$result['has_more'] = ($cursor < $totalFiles);		
+		$result['total_items'] = $totalFiles;
+
+    	return (new SS_HTTPResponse(
+    		Convert::array2json($result), 200
+    	))->addHeader('Content-Type', 'application/json');
+
+	}
+
+	/**
+	 * Gets recently updated items
+	 * 
+	 * @param  SS_HTTPRequest $r
+	 * @return SS_HTTPResponse
+	 */
+	public function handleRecentItems(SS_HTTPRequest $r) {
+		$result = array ();
+
+		$fileIDs = File::get()
+				 	->sort('LastEdited', 'DESC')
+				 	->limit($this->config()->recent_items_limit)
+				 	->column('ID');				 	
+		
+		if(!empty($fileIDs)) {
+			$files = File::get()
+				 	->sort($this->getSortClause($r->getVar('sort')))
+				 	->byIDs($fileIDs);
+
+			foreach($files as $file) {
+				if(!$file->canView()) continue;
+				
+				$result[] = ($file instanceof Folder) ? 
+								$this->createFolderJSON($file) : 
+								$this->createFileJSON($file);
+				
 			}
-			return $content;
 		}
 
-		$parentID = $this->currentFolder->ID;
-		$child = Folder::get()->filter(array(
-			'Name' => $next,
-			'ParentID' => $parentID
-		))->first();
-		if($child) {
-			$this->currentFolder = $child;
-			$request->shiftAllParams();
-			$request->shift();
-			return $this->browse($request);
-		}
-		die("Couldn't find \"$next\" under folder {$this->currentFolder->Name}");
-
-
-
+    	return (new SS_HTTPResponse(
+    		Convert::array2json($result), 200
+    	))->addHeader('Content-Type', 'application/json');
 	}
 
+	/**
+	 * Creates a folder, ensures uniqueness
+	 * 
+	 * @param  SS_HTTPRequest $r
+	 * @return SS_HTTPResponse
+	 */
+	public function handleCreateFolder(SS_HTTPRequest $r) {
 
+		if(!Injector::inst()->get('Folder')->canCreate()) return $this->httpError(403);
 
-	public function handleEdit(SS_HTTPRequest $r) {
-		if($file = File::get()->byID($r->param('ID'))) {
-			return KickAssets_FileRequest::create($file)->handleRequest($r, DataModel::inst());
-		}
-		return $this->httpError(404);
-	}
-
-
-	public function deleteitems(SS_HTTPRequest $r) {
-		if($ids = $r->requestVar('ids')) {
-			foreach($ids as $id) {
-				if($file = File::get()->byID((int) $id)) {
-					$file->delete();
-				}
-			}
-		}
-		return new SS_HTTPResponse("OK");
-	}
-
-
-
-
-	public function newfolder(SS_HTTPRequest $r) {
-		if(!singleton("Folder")->canCreate()) return Security::permissionFailure($this);
-
-		$parentID = (int) $r->param('ID');
+		$parentID = (int) $r->postVar('parentID');
 		$parentRecord = Folder::get()->byID($parentID);
-		$name =_t('AssetAdmin.NEWFOLDER',"NewFolder");
+		$name = $r->postVar('title') ? $r->postVar('title') : _t('AssetAdmin.NEWFOLDER',"NewFolder");
 
 		if($parentRecord && $parentRecord->ID) {
 			$filename = $parentRecord->FullPath . $name;
@@ -182,227 +268,473 @@ class KickAssets extends LeftAndMain implements PermissionProvider {
 		mkdir($record->FullPath);
 		@chmod($record->FullPath, Config::inst()->get('Filesystem','file_create_mask'));
 
-		return new SS_HTTPResponse($record->write());
+		$record->write();
+
+		return (new SS_HTTPResponse(
+			Convert::array2json($this->createFolderJSON($record))
+		))->addHeader('Content-Type','application/json');
 	}
 
+	/**
+	 * Handles a specific file request
+	 * 
+	 * @param  SS_HTTPRequest $rq
+	 * @return KickAssets_FileRequest
+	 */
+	public function handleFile(SS_HTTPRequest $r) {
+		$file = File::get()->byID($r->param('FileID'));
+		if($file) {
+			$request = new KickAssets_FileRequest($this, $file);
 
-
-
-	public function updateitem(SS_HTTPRequest $r) {
-		if($item = File::get()->byID((int) $r->param('ID'))) {
-			if($title = $r->requestVar('title')) {
-				$item->Title = $title;
-				$item->write();
-			}
+			return $request->handlerequest($r, DataModel::inst());
 		}
+
+		return $this->httpError(404, 'File does not exist');
 	}
 
-
-
-
-	public function moveitems(SS_HTTPRequest $r) {
-		if($destination = Folder::get()->byID((int) $r->requestVar('destination'))) {
-			if(is_array($r->requestVar('items'))) {
-				foreach($r->requestVar('items') as $id) {
-					if($item = File::get()->byID((int) $id)) {
-						$item->ParentID = $destination->ID;
-						$item->write();
-					}
-				}
-				return new SS_HTTPResponse("OK");
-			}
-		}
+	/**
+	 * Gets a list of all the folders in the system
+	 * 
+	 * @param  SS_HTTPRequest $r
+	 * @return SS_HTTPResponse
+	 */
+	public function handleFolders(SS_HTTPRequest $r) {
+		$response = array ();
 		
-		/* moving into home directory */
-		if($r->requestVar('destination') == 0) {
-			if(is_array($r->requestVar('items'))) {
-				foreach($r->requestVar('items') as $id) {
-					if($item = File::get()->byID((int) $id)) {
-						$item->ParentID = 0;
-						$item->write();
-					}
-				}
-				return new SS_HTTPResponse("OK");
-			}
+		foreach(Folder::get() as $f) {
+			$response[] = array (
+				'id' => $f->ID,
+				'filename' => $f->Filename
+			);
 		}
+
+		return (new SS_HTTPResponse(
+			Convert::array2json($response)
+		))->addHeader('Content-Type','application/json');		
 	}
 
+	/**
+	 * The endpoint for file uploads. Hands off to Dropzone module
+	 * 
+	 * @param  SS_HTTPRequest $r
+	 * @return SS_HTTPResponse
+	 */
+	public function handleUpload(SS_HTTPRequest $r) {
+		$r->setUrl('upload');
+		$folder = Folder::get()->byID($r->param('FolderID'));
+		$uploader = FileAttachmentField::create('dummy');
 
-
-
-	public function upload(SS_HTTPRequest $r) {
-		$destination = Folder::get()->byId((int) $r->param('ID'));
-		if(!$destination) {
-			$path = false;
-			Config::inst()->update('Upload', 'uploads_folder', '');
+		
+		if($folder) {
+			$uploader->setFolderName(self::remove_assets_dir($folder->Filename));
 		}
 		else {
-			$path = preg_replace('/^'.ASSETS_DIR.'/','', $destination->Filename);
-		}
-		$files = array ();
-		foreach($_FILES['files'] as $k => $list) {
-			foreach($list as $i => $file) {
-				if(!isset($files[$i])) $files[$i] = array ();
-				$files[$i][$k] = $file;
-			}
+			$uploader->setFolderName('/');
 		}
 
-		foreach($files as $tmpFile) {
-			if(preg_match('/^image\//', $tmpFile['type'])) {
-				$o = Image::create();
-			}
-			else {
-				$o = File::create();
-			}
-			Upload::create()->loadIntoFile($tmpFile, $o, $path);
-			if($o instanceof Image) {
-				$o->deleteFormattedImages();
+		$httpResponse = $uploader->handleRequest($r, DataModel::inst());
+		
+		if($httpResponse->getStatusCode() !== 200) {
+			return $httpResponse;
+		}
+		
+		$ids = $httpResponse->getBody();
+		$files = File::get()->byIDs(explode(',', $ids));
+		$response = array ();
+
+		foreach($files as $f) {
+			$response[] = $this->createFileJSON($f, $folder);
+		}
+
+		return (new SS_HTTPResponse(
+			Convert::array2json($response)
+		))->addHeader('Content-Type','application/json');
+	}
+
+	/**
+	 * Deletes a list of files
+	 * 
+	 * @param  SS_HTTPRequest $r
+	 * @return SS_HTTPResponse
+	 */
+	public function handleDelete(SS_HTTPRequest $r) {
+		parse_str($r->getBody(), $vars);
+		$count = 0;
+		if($vars['ids']) {
+			foreach(explode(',',$vars['ids']) as $id) {
+				if($file = File::get()->byID($id)) {
+					if($file->canDelete()) {
+						$file->delete();
+						$count++;
+					}
+				}
 			}
 		}
+		return (new SS_HTTPResponse(
+			Convert::array2json(array(
+				'deleted' => $count
+			))
+		))->addHeader('Content-Type','application/json');
 
 	}
 
+	/**
+	 * Searches for files by PartialMatch
+	 * 
+	 * @param  SS_HTTPRequest $r
+	 * @return SS_HTTPResponse
+	 */
+	public function handleSearch(SS_HTTPRequest $r) {
 
+		if($r->getVar('search') === null) return;
 
-
-	public function getplaceholders(SS_HTTPRequest $r) {
-		$json = array (
-			'pdf' => 'pdf',
-			'jpeg' => 'image',
-			'png' => 'image',
-			'gif' => 'image',
-			'jpg' => 'image',
-			'xls' => 'xls',
-			'xlsx' => 'xls',
-			'mov' => 'mov',
-			'zip' => 'zip',
-			'doc' => 'doc',
-			'docx' => 'doc'
-		);
-		foreach(Config::inst()->get('File','app_categories') as $cat => $exts) {
-			foreach($exts as $ext) {
-				$json[$ext] = $cat;
-			}
+		$results = array ();
+		$list = File::get()->filterAny(array(
+			'Title:PartialMatch' => $r->getVar('search'),
+			'Filename:PartialMatch' => $r->getVar('search')
+		))->limit(100);
+		
+		foreach($list as $item) {
+			if(!$item->canView()) continue;
+			$results[] = $item instanceof Folder ? $this->createFolderJSON($item) : $this->createFileJSON($item);
 		}
-		return new SS_HTTPResponse(Convert::array2json($json));
+
+		return (new SS_HTTPResponse(
+			Convert::array2json($results)
+		))->addHeader('Content-Type','application/json');
 	}
 
+	/**
+	 * Creates a JSON string of all the variables that can be set in the Config
+	 *
+	 * @return string
+	 */
+	public function JSONConfig() {
+		$r = $this->request;
 
+		// Remove null values and normalise leading dot
+		$exts = array_map(function($item) {
+				return $item[0] == '.' ? $item : '.'.$item;
+		}, array_filter(
+			File::config()->allowed_extensions,
+			'strlen'
+		));
+		
+		$types = explode(',',$r->getVar('allowedTypes'));
+		
+		return Convert::array2json(array(
+			'baseRoute' => $this->Link(),
+			'maxFilesize' => FileAttachmentField::get_filesize_from_ini(),
+			'allowedExtensions' => implode(',', $exts),
+			'thumbnailsDir' => DROPZONE_DIR.'/images/file-icons',			
+			'langNewFolder' => _t('AssetAdmin.NEWFOLDER','NewFolder'),
+			'iconSize' => self::ICON_SIZE,
+			'thumbnailWidth' => self::IMAGE_WIDTH,
+			'thumbnailHeight' => self::IMAGE_HEIGHT,
+			'defaultSort' => $this->config()->default_sort,
+			'defaultView' => $this->config()->default_view,
+			'maxCacheSize' => $this->config()->max_cache_size,
+			'folderExtension' => self::FOLDER_EXTENSION,
 
-	public function FolderBreadcrumbs() {
-		$list = array ();
-		$folder = $this->currentFolder;
-		while($folder) {
-			$list [] = $folder;
-			$folder = $folder->Parent;
-		}
-		if(!$this->isRoot()) {
-			$list[] = $this->createRootFolder();
-		}
-		$crumbs = array_reverse($list);
-		$set = ArrayList::create($crumbs);
-		return $set;
-	}
-
-
-
-	public function getCurrentFolder() {
-		return $this->currentFolder;
-	}
-
-
-
-
-	public function createRootFolder() {
-		return Folder::create(array(
-			'ID' => 0,
-			'Name' => ASSETS_DIR
+			'allowSelection' => (boolean) $r->getVar('allowSelection'),
+			'maxSelection' => (int) $r->getVar('maxSelection'),
+			'canUpload' => (boolean) $r->getVar('canUpload'),
+			'canDelete' => (boolean) $r->getVar('canDelete'),
+			'canEdit' => (boolean) $r->getVar('canEdit'),
+			'canCreateFolder' => (boolean) $r->getVar('canCreateFolder'),
+			'allowedTypes' => !empty($types) ? $types : null
 		));
 	}
 
+	/**
+	 * Moves a list of files ('ids') to a new folder ('newFolder' named file path or ID)
+	 * If newFolder is a string, the folder will be created if it doesn't exist.
+	 * 	
+	 * @param  SS_HTTPRequest $r
+	 * @return SS_HTTPResponse
+	 */
+	public function handleMove(SS_HTTPRequest $r) {
+		parse_str($r->getBody(), $vars);
 
+		if(!isset($vars['ids'])) return $this->httpError(400,'No ids provided');
+		if(!isset($vars['newFolder'])) return $this->httpError(400, 'No new folder provided');
 
-	public function isRoot() {
-		return !$this->currentFolder->exists();
-	}
-
-
-	public function canView($member = null) {
-		return Permission::check("CMS_ACCESS_CMSMain");
-	}
-
-	public function Link($action = null) {
-		$link = parent::Link($action);
-		if (strpos($link, "?locale=") > 0) {
-			$link = preg_replace("/\?locale=([A-Za-z_]+)/", "", $link);
+		if(is_numeric($vars['newFolder'])) {
+			$folderID = $vars['newFolder'];
+		}
+		else if(!empty($vars['newFolder'])) {
+			if(!Injector::inst()->get('folder')->canCreate()) {
+				return $this->httpError(403, 'Cannot create folder: ' . $vars['newFolder']);
+	
+			}
+			$folderID = Folder::find_or_make(self::remove_assets_dir($vars['newFolder']))->ID;
 		}
 
-		return $link;
+		$files = File::get()->byIDs(explode(',',$vars['ids']));
+
+		foreach($files as $file) {
+			if(!$file->canEdit()) return $this->httpError(403,'Cannot edit file: ' . $file->Filename);
+
+			$file->ParentID = $folderID;
+			$file->write();
+		}
+
+		return new SS_HTTPResponse('OK', 200);
 	}
+	
+	/**
+	 * Given a Folder object, create an array of its properties and values
+	 * ready to be transformed to JSON
+	 * 	
+	 * @param  Folder $folder
+	 * @return array
+	 */
+	public function createFolderJSON(Folder $folder) {
+		$size = self::ICON_SIZE;
+		$file = Injector::inst()->get('File');
 
-}
-
-
-
-class KickAssets_FileRequest extends RequestHandler {
-
-	static $allowed_actions = array (
-		'EditForm',
-		'doFileSave'
-	);
-
-
-	protected $file;
-
-
-	public function __construct(File $f) {
-		$this->file = $f;
-		parent::__construct();
-	}
-
-
-
-	public function index(SS_HTTPRequest $r) {
-		return $this->renderWith('KickAssetsEditForm');
-	}
-
-
-
-	public function Link($action = null) {
-		return Controller::join_links(
-			Injector::inst()->get("KickAssets")->Link(),
-			"editkickassetsfile",
-			$this->file->ID,
-			$action
+		return array (
+			'id' => $folder->ID,
+			'parentID' => $folder->ParentID,
+			'title' => $folder->Title,
+			'filename' => $folder->Filename,
+			'type' => 'folder',
+			'extension' => self::FOLDER_EXTENSION,
+			'created' => $folder->Created,
+			'iconURL' => $folder->getPreviewThumbnail($size, $size)->URL,
+			'canEdit' => $folder->canEdit(),
+			'canCreate' => $folder->canCreate(),
+			'canDelete' => $folder->canDelete(),
+			'canUpload' => $folder->canEdit() && $file->canCreate()
 		);
 	}
 
+	/**
+	 * Given a File object, create an array of its properties and values
+	 * ready to be transformed to JSON
+	 * 	
+	 * @param  Folder $folder
+	 * @return array
+	 */
+	public function createFileJSON(File $file, $folder = null) {
+		$isImage = $file instanceof Image;
+		$w = $isImage ? self::IMAGE_WIDTH : self::ICON_SIZE;
+		$h = $isImage ? self::IMAGE_HEIGHT : self::ICON_SIZE;
+		$folder = $folder ?: $file->Parent();
 
-
-
-	public function EditForm() {
-		return Form::create(
-			$this,
-			"EditForm",
-			$this->file->getCMSFields(),
-			FieldList::create(
-				FormAction::create("doFileSave",_t('KickAssets.SAVE','Save'))
-					->addExtraClass("ss-ui-button ss-ui-action-constructive"),
-				FormAction::create("doFileCancel", _t('KickAssets.CANCEL','Cancel'))
-			)
-		)
-		->loadDataFrom($this->file);
+		return array (
+			'id' => $file->ID,
+			'parentID' => $file->ParentID,
+			'title' => $file->Title,
+			'filename' => basename($file->Filename),
+			'folderName' => $folder->Filename,
+			'type' => $isImage ? 'image' : 'file',
+			'extension' => $file->getExtension(),
+			'created' => $file->Created,
+			'updated' => $file->LastEdited,
+			'iconURL' => $file->getPreviewThumbnail($w, $h)->URL,
+			'canEdit' => $file->canEdit(),
+			'canCreate' => $file->canCreate(),
+			'canDelete' => $file->canDelete()
+		);		
 	}
 
+	/**
+	 * Creates an array of breadcrumbs for a given Folder, ready to be
+	 * transformed to JSON
+	 * 
+	 * @param  Folder $folder 
+	 * @return array
+	 */
+	protected function createBreadcrumbJSON(Folder $folder) {
+		$breadcrumbs = array();
+		while($folder->exists()) {
+			$breadcrumbs[] = array (
+				'title' => $folder->Title,
+				'id' => $folder->ID
+			);
 
+			$folder = $folder->Parent();
+		}
+		$breadcrumbs[] = array (
+			'title' => ASSETS_DIR,
+			'id' => 0
+		);
 
-	public function doFileSave($data, $form) {
-		$form->saveInto($this->file);
-		$this->file->write();
+		return array_reverse($breadcrumbs);
+	}
+
+	/**
+	 * Given a sort field, generate a string of SQL to apply the sort
+	 * 
+	 * @param  string $sort
+	 * @return string
+	 */
+	protected function getSortClause($sort) {
+		$folder = "ClassName != 'Folder' ASC";
+		$case = "CASE WHEN ClassName='Folder' THEN '".self::FOLDER_EXTENSION."' ELSE SUBSTRING_INDEX(Filename,'.',-1) END";
+		
+		switch($sort) {
+			case 'az':
+				return "$folder, Title ASC";
+			case 'za':
+				return "$folder, Title DESC";
+			case 'oldest':
+				return "$folder, Created ASC";
+			case 'newest':
+				return "$folder, Created DESC";
+			case 'latest':
+				return "$folder, LastEdited DESC";
+			case 'kind':
+				return "$folder, $case ASC";
+			case 'kinddesc':
+				return "$folder, $case DESC";
+			default:
+				return "$folder, Created DESC";
+		}
+	}
+}
+
+/**
+ * A subcontroller designed to deal with the CRUD for a specific file
+ *
+ * @package  unclecheese/silverstripe-kickassets
+ * @author  Uncle Cheese <unclecheese@leftandmain.com>
+ */
+class KickAssets_FileRequest extends RequestHandler {
+
+	/**
+	 * A list of various endpoints
+	 * 
+	 * @var array
+	 */
+	private static $url_handlers = array (
+		'GET ' => 'handleRead',
+		'PUT ' => 'handleUpdate',
+		'DELETE ' => 'handleDelete'
+	);
+
+	/**
+	 * A list of allowed controller actions
+	 * 
+	 * @var array
+	 */
+	private static $allowed_actions = array (
+		'handleRead',
+		'handleUpdate',
+		'handleDelete'
+	);
+
+	/**
+	 * The parent controller
+	 * 
+	 * @var KickAssets
+	 */
+	protected $parent;
+
+	/**
+	 * The file that this controller will be editing/reading/deleting
+	 * 
+	 * @var File
+	 */
+	protected $file;
+
+	/**
+	 * Constructor, sets the parent and file
+	 * 
+	 * @param KickAssets $parent
+	 * @param File       $file
+	 */
+	public function __construct(KickAssets $parent, File $file) {
+		parent::__construct();
+		$this->parent = $parent;
+		$this->file = $file;	
+	}
+
+	/**
+	 * Serves up the details for the file bound to this controller
+	 * 
+	 * @param  SS_HTTPRequest $r
+	 * @return SS_HTTPResponse
+	 */
+	public function handleRead(SS_HTTPRequest $r) {
+		if(!$this->file->canView()) return $this->httpError(403);
+
+		return $this->JSONResponse($this->buildJSON());
+	}	
+
+	/**
+	 * Applies edits to the file bound to this controller
+	 * 
+	 * @param  SS_HTTPRequest $r
+	 * @return SS_HTTPResponse
+	 */
+	public function handleUpdate(SS_HTTPRequest $r) {
+		if(!$this->file->canEdit()) return $this->httpError(403);
+
+		parse_str($r->getBody(), $vars);
+		
+		if(isset($vars['parentID'])) {
+			$this->file->ParentID = $vars['parentID'];
+			$this->file->write();
+		}
+		$this->file->Title = $vars['title'];
+		if(isset($vars['filename']) && !empty($vars['filename'])) {
+			$this->file->Filename = $this->file->Parent()->Filename.'/'.$vars['filename'];
+		}
+		$this->file->write();			
+
+		return $this->JSONResponse($this->buildJSON());
+	}
+
+	/**
+	 * Deletes the file bound to this controller
+	 * 	
+	 * @param  SS_HTTPRequest $r
+	 * @return SS_HTTPResponse
+	 */
+	public function handleDelete(SS_HTTPRequest $r) {
+		if(!$this->file->canDelete()) return $this->httpError(403);
+
+		$this->file->delete();
+
+		return new SS_HTTPResponse('OK');
+	}
+
+	/**
+	 * Adds new properties to the parent (KickAssets) file JSON
+	 * 
+	 * @return array
+	 */
+	protected function buildJSON() {
+		$json = $this->parent->createFileJSON($this->file);
+		$json['created'] = $this->file->obj('Created')->FormatFromSettings();
+		$json['lastEdited'] = $this->file->obj('LastEdited')->FormatFromSettings();
+		$json['url'] = $this->file->getAbsoluteURL();
+
+		$json['size'] = $this->file->getSize();
+		$json['folder'] = $this->file->Parent()->Filename;
 
 		if($this->file instanceof Image) {
-			$this->file->deleteFormattedImages();
+			$json['previewImage'] = $this->file->CroppedImage(400, 133)->URL;
+			$json['detailImage'] = $this->file->getKickAssetsDetailImage()->URL;
 		}
-		return new SS_HTTPResponse(_t('KickAssets.FILEUPDATED','File updated'));
+
+		return $json;
+	}
+
+	/**
+	 * Helper method for generating an HTTPResponse based on given JSON
+	 * 
+	 * @param array $json
+	 */
+	protected function JSONResponse($json = null) {
+		if(!$json) {
+			$json = $this->file instanceof Folder ? $this->parent->createFolderJSON($this->file)
+												  : $this->parent->createFileJSON($this->file);
+		}
+		return (new SS_HTTPResponse(
+			Convert::array2json($json)
+		))->addHeader('Content-Type','application/json');		
 	}
 }

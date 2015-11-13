@@ -413,10 +413,14 @@ class KickAssets extends LeftAndMain {
 		$r = $this->request;
 
 		// Remove null values and normalise leading dot
+		$allExts = $r->getVar('allowedExtensions') ? 
+				   explode(',', $r->getVar('allowedExtensions')) : 
+				   File::config()->allowed_extensions;
+
 		$exts = array_map(function($item) {
 				return $item[0] == '.' ? $item : '.'.$item;
 		}, array_filter(
-			File::config()->allowed_extensions,
+			$allExts,
 			'strlen'
 		));
 		

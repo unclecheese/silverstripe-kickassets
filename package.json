@@ -31,6 +31,7 @@
     "style-loader": "^0.8.3",
     "superagent": "^1.4.0",
     "superagent-cache": "^1.0.2",
+    "url-loader": "^0.5.6",
     "watchpack": "^0.2.3",
     "webpack": "^1.7.3"
   }

@@ -121,8 +121,20 @@ const SelectedItemsStore = Reflux.createStore({
 		return _state.data.every(item => types.indexOf(item.get('type')) > -1) 
 	},
 
+	isValidExtensions () {
+		const exts = Config.get('allowedExtensions')
+						.split(',')
+						.map(ex => ex.replace(/^\./,''));
+		
+		if(!exts.length) return true;
+
+		return _state.data.every(item => {
+			return exts.indexOf(item.get('extension')) > -1;
+		});
+	},
+
 	isValid () {
-		return Config.get('allowSelection') && this.isValidCount() && this.isValidTypes();
+		return Config.get('allowSelection') && this.isValidCount() && this.isValidTypes() && this.isValidExtensions();
 	}
 });
 

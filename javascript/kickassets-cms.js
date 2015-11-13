@@ -11,7 +11,8 @@ window.KickAssets = {
 		canEdit: true,
 		canCreateFolder: true,
 		canBrowse: true,
-		allowedTypes: 'file,image,folder'
+		allowedTypes: 'file,image,folder',
+		allowedExtensions: null
 	},
 
 	open: function (params, onComplete) {

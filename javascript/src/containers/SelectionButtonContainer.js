@@ -38,6 +38,10 @@ const SelectionButtonContainer = React.createClass({
 		const items = this.state.selectedItems.toJS();
 		const max = Config.get('maxSelection');
 		const types = Config.get('allowedTypes');
+		const extensions = Config.get('allowedExtensions')
+								.split(',')
+								.map(ex => ex.replace(/^\./,''));
+
 		let error;
 
 		if(!SelectedItemsStore.isValidCount()) {
@@ -52,6 +56,13 @@ const SelectionButtonContainer = React.createClass({
 				'KickAssets.INVALIDTYPESSELECTED',
 				'You have selected some invalid items. Please select only %s'
 			), types.join(', '));
+		}
+
+		if(!SelectedItemsStore.isValidExtensions()) {
+			error = sf(_t(
+				'KickAssets.INVALIDEXTENSIONSSELECTED',
+				'You have selected some fiels with invalid extensions. Please select only %s'
+			), extensions.join(', '));
 		}
 
 		if(error) {

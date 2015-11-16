@@ -132,9 +132,12 @@ const SelectedItemsStore = Reflux.createStore({
 			return exts.indexOf(item.get('extension')) > -1;
 		});
 	},
-
+	
 	isValid () {
-		return Config.get('allowSelection') && this.isValidCount() && this.isValidTypes() && this.isValidExtensions();
+		return Config.get('allowSelection') && 
+				this.isValidCount() && 
+				this.isValidTypes() && 
+				this.isValidExtensions();
 	}
 });
 

@@ -6,6 +6,7 @@ import Actions from '../actions/Actions';
 import Config from '../stores/Config';
 import {Glyphicon, Popover} from 'react-bootstrap';
 import cx from 'classnames';
+import sizeFormatter from '../utils/sizeFormatter';
 import _t, {sf} from '../utils/lang';
 
 const getStoreData = () => {
@@ -61,7 +62,7 @@ const SelectionButtonContainer = React.createClass({
 		if(!SelectedItemsStore.isValidExtensions()) {
 			error = sf(_t(
 				'KickAssets.INVALIDEXTENSIONSSELECTED',
-				'You have selected some fiels with invalid extensions. Please select only %s'
+				'You have selected some files with invalid extensions. Please select only %s'
 			), extensions.join(', '));
 		}
 

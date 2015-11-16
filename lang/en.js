@@ -45,7 +45,7 @@ else {
 		'KickAssets.SEARCHFILES': 'Search files',
 		'KickAssets.BROWSEFILES': 'Browse files',
 		'KickAssets.MOSTRECENT': 'Most recent',
-		'KickAssets.DONE': 'Done'
+		'KickAssets.DONE': 'Done',
 		'KickAssets.TOOMANYSELECTED': 'You have selected too many items. Please select no more than %s.',
 		'KickAssets.INVALIDTYPESSELECTED': 'You have selected some invalid items. Please select only %s',
 		'KickAssets.INVALIDEXTENSIONSSELECTED': 'You have selected some files with invalid extensions. Please select only %s'

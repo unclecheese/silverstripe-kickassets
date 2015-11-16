@@ -9,3 +9,9 @@ if(!preg_match('/(?i)msie [5-9]/',$_SERVER['HTTP_USER_AGENT'])) {
 else {
 	CMSMenu::remove_menu_item('KickAssets');
 }
+
+if(KickAssets::config()->use_on_uploadfield) {
+	Config::inst()->update('LeftAndMain','extra_requirements_javascript', array(
+		KICKASSETS_DIR.'/javascript/kickassets-uploadfield.js' => array ()
+	));
+}

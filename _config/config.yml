@@ -7,12 +7,15 @@ KickAssets:
   default_sort: 'newest'
   default_view: 'grid'
   max_cache_size: 500000  
+  use_on_uploadfield: true
 Image:
   extensions:
     - KickAssetsImage
 LeftAndMain:
   extra_requirements_css: ['kickassets/css/kickassets-cms.css']
   extra_requirements_javascript: ['kickassets/javascript/kickassets-cms.js']
+UploadField:
+  extensions: ['KickAssetsUploadField']
 ---
 Only:
   environment: dev

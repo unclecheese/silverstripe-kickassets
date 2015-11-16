@@ -75,13 +75,14 @@ window.KickAssets = {
 			}
 		}
 
-		return 'admin/kickassets/show/'+merged.folderID+'?'+this._serialise(merged);	
+		return 'admin/kickassets/show/'+merged.folderID+'?'+this._serialise(merged);
 	},
 
 	_serialise: function(obj) {
 	  var str = [];
 	  for(var p in obj)
 	    if (obj.hasOwnProperty(p)) {
+	      if(obj[p] === null) continue;
 	      if(obj[p] === true) obj[p] = 1;
 	      if(obj[p] === false) obj[p] = 0;
 
@@ -102,6 +103,7 @@ $.entwine('ss', function($) {
 		}
 	});
 });
+
 
 
 })(jQuery);

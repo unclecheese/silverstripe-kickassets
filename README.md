@@ -83,6 +83,19 @@ A full list of permissions:
 | allowedTypes | A comma-separated list of file types that can be selected | 'file,image,folder' |
 
 
+## Usage with UploadField and Dropzone
+
+By default, the `unclecheese/silverstripe-dropzone` module will detect KickAssets and use it on `FileAttachmentField` for selecting existing files.
+
+To get the same behaviour on `UploadField`, ensure the `use_on_uploadfield` setting is set to `true`. (It is by default).
+
+```yaml
+KickAssets:
+  use_on_uploadfield: true
+```
+
+Most settings, such as max files, allowed extensions, and and upload folder will transfer over to the KickAssets window.
+
 ## Browser support
 
 Everyone can come to the party except IE9. Sorry.

@@ -86,6 +86,12 @@ class KickAssets extends LeftAndMain {
 	);
 
 	/**
+	 * Icon for the CMS menu
+	 * @var string
+	 */
+	private static $menu_icon = 'kickassets/images/icon.png';
+
+	/**
 	 * Strips the assets directory from the beginning of a folder name
 	 * 
 	 * @param  string $filename
@@ -531,6 +537,7 @@ class KickAssets extends LeftAndMain {
 			'parentID' => $file->ParentID,
 			'title' => $file->Title,
 			'filename' => basename($file->Filename),
+			'filesize' => $file->getAbsoluteSize(),
 			'folderName' => $folder->Filename,
 			'type' => $isImage ? 'image' : 'file',
 			'extension' => $file->getExtension(),

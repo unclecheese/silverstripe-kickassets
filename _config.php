@@ -15,3 +15,8 @@ if(KickAssets::config()->use_on_uploadfield) {
 		KICKASSETS_DIR.'/javascript/kickassets-uploadfield.js' => array ()
 	));
 }
+
+if(KickAssets::config()->use_on_tinymce) {	
+	HtmlEditorConfig::get('cms')->enablePlugins(array('kickassets' => '../../../'.KICKASSETS_DIR.'/javascript/kickassets-tinymce.js'));
+	HtmlEditorConfig::get('cms')->insertButtonsAfter('ssmedia', 'kickassets');
+}

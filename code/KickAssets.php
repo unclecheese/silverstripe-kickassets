@@ -537,6 +537,7 @@ class KickAssets extends LeftAndMain {
 			'parentID' => $file->ParentID,
 			'title' => $file->Title,
 			'filename' => basename($file->Filename),
+			'path' => $file->Filename,
 			'filesize' => $file->getAbsoluteSize(),
 			'folderName' => $folder->Filename,
 			'type' => $isImage ? 'image' : 'file',

@@ -96,11 +96,17 @@ KickAssets:
 
 Most settings, such as max files, allowed extensions, and and upload folder will transfer over to the KickAssets window.
 
+## Usage with HTMLEditorField
+
+In addition to the "Insert Media" button that comes with the default configuration of the CMS, KickAssets adds a "Browse files..." buttton that opens the KickAssets window, allowing you to upload, move, edit, and delete files and insert them into the editor at the position of the cursor. 
+
+If you select one or many images, they will be appended to the the editor in the order in which they were selected. If you select a file, it will link any text that is selected in the editor to the URL of that file. If no text is selected and you choose a file, it will insert a link to the file using the title of the file as the clickable text.
+
 ## Browser support
 
 Everyone can come to the party except IE9. Sorry.
 
-(Not really.)
+(I'm not really sorry.)
 
 ## Contributing
 

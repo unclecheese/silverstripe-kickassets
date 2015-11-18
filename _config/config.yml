@@ -8,6 +8,7 @@ KickAssets:
   default_view: 'grid'
   max_cache_size: 500000  
   use_on_uploadfield: true
+  use_on_tinymce: true
 Image:
   extensions:
     - KickAssetsImage

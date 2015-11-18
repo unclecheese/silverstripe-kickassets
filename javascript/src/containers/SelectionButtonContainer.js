@@ -52,14 +52,14 @@ const SelectionButtonContainer = React.createClass({
 			), max);
 		}
 
-		if(!SelectedItemsStore.isValidTypes()) {
+		else if(!SelectedItemsStore.isValidTypes()) {
 			error = sf(_t(
 				'KickAssets.INVALIDTYPESSELECTED',
 				'You have selected some invalid items. Please select only %s'
 			), types.join(', '));
 		}
 
-		if(!SelectedItemsStore.isValidExtensions()) {
+		else if(!SelectedItemsStore.isValidExtensions()) {
 			error = sf(_t(
 				'KickAssets.INVALIDEXTENSIONSSELECTED',
 				'You have selected some files with invalid extensions. Please select only %s'

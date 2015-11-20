@@ -263,7 +263,13 @@ class KickAssets extends LeftAndMain {
 
 		// Ensure uniqueness
 		$i = 2;
-		$baseFilename = substr($record->Filename, 0, -1) . '-';
+		if(substr($record->Filename, -1) == "/") {
+			$baseFilename = substr($record->Filename, 0, -1);
+		}
+		else {
+			$baseFilename = $record->Filename;
+		}
+		$baseFilename .= "-";
 		while(file_exists($record->FullPath)) {
 			$record->Filename = $baseFilename . $i . '/';
 			$i++;

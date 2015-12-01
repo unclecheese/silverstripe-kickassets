@@ -436,10 +436,11 @@ class KickAssets extends LeftAndMain {
 			'strlen'
 		));
 		
+		$currentLinkParts = parse_url(Controller::join_links(Director::baseURL(), $this->Link()));
 		$types = explode(',',$r->getVar('allowedTypes'));
-		
+
 		return Convert::array2json(array(
-			'baseRoute' => Controller::join_links(Director::baseURL(), $this->Link()),
+			'baseRoute' => $currentLinkParts['path'],
 			'maxFilesize' => FileAttachmentField::get_filesize_from_ini(),
 			'allowedExtensions' => implode(',', $exts),
 			'thumbnailsDir' => DROPZONE_DIR.'/images/file-icons',			

@@ -123,6 +123,12 @@ When finished, create a production bundle by setting an environment file and tur
 
 `PROD=1 webpack -p`.
 
+If you would prefer not to install webpack globally, there are these handy npm scripts:
+
+- `npm run build` - Does a one time webpack build
+- `npm run build:watch` - Equivalent to `webpack -watch`
+- `npm run build:prod` - Equivalent to `PROD=1 webpack -p`
+
 ## Troubleshooting
 
 Ring Uncle Cheese.

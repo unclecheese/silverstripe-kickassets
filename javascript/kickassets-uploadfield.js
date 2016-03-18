@@ -8,7 +8,7 @@ $.entwine('ss', function ($) {
 				this._super();
 				var iFrameURL = this.getConfig().urlSelectDialog,
 					self = this,
-					folderURL = iFrameURL.replace(/select$/,'folderid');
+					folderURL = iFrameURL.replace(/select/,'folderid');
 
 				$.ajax({
 					url: folderURL,

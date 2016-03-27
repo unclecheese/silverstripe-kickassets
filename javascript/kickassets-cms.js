@@ -16,14 +16,21 @@ window.KickAssets = {
 	},
 
 	open: function (params, onComplete) {
-		var dialog = jQuery('<div class="kickassets-dialog"/>');
+		var dialog = jQuery('<div class="kickassets-dialog"/>'),
+			storedLink = window.localStorage.getItem('KickassetsURL'),
+			link = (storedLink && !params) ?  storedLink : this.getLink(params);
 
 		dialog.ssdialog({
-			iframeUrl: this.getLink(params),
+			iframeUrl: link,
 			height: (window.innerHeight*0.95), 
 			minHeight: (window.innerHeight*0.95), 
 			width: (window.innerWidth*0.95),
-			minWidth: (window.innerWidth*0.95)
+			minWidth: (window.innerWidth*0.95),
+			close: function () {
+				var iframe = dialog.find('iframe')[0];
+				var iframeWindow = iframe.contentWindow || iframe;
+				window.localStorage.setItem('KickassetsURL', iframeWindow.location.href);
+			}
 		});
 
 		dialog.ssdialog('open');

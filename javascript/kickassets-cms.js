@@ -2,6 +2,8 @@ window.KickAssets = {
 
 	_dialog: null,
 
+	_url: null,
+
 	_defaults: {
 		allowSelection: false,
 		maxSelection: 0,
@@ -17,8 +19,11 @@ window.KickAssets = {
 
 	open: function (params, onComplete) {
 		var dialog = jQuery('<div class="kickassets-dialog"/>'),
-			storedLink = window.localStorage.getItem('KickassetsURL'),
-			link = (storedLink && !params) ?  storedLink : this.getLink(params);
+			storedLink = this._url,
+			link = (storedLink && (!params || params.folderID === undefined)) ?  
+					storedLink : 
+					this.getLink(params),
+			self = this;
 
 		dialog.ssdialog({
 			iframeUrl: link,
@@ -29,7 +34,7 @@ window.KickAssets = {
 			close: function () {
 				var iframe = dialog.find('iframe')[0];
 				var iframeWindow = iframe.contentWindow || iframe;
-				window.localStorage.setItem('KickassetsURL', iframeWindow.location.href);
+				self._url = iframeWindow.location.href;
 			}
 		});
 

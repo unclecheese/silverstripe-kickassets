@@ -62,7 +62,8 @@ class KickAssets extends LeftAndMain {
 		'PUT move' => 'handleMove',
 		'upload/$FolderID' => 'handleUpload',
 		'file/$FileID' => 'handleFile',
-		'GET $Action/$ID/$OtherID' => 'handleIndex',		
+		'GET $Action/$ID/$NestedAction/$OtherID' => 'handleIndex',
+		'GET $Action/$ID/$OtherID' => 'handleIndex',
 		'DELETE ' => 'handleDelete',
 		'GET ' => 'handleIndex'		
 	);
@@ -735,8 +736,10 @@ class KickAssets_FileRequest extends RequestHandler {
 		$json['folder'] = $this->file->Parent()->Filename;
 
 		if($this->file instanceof Image) {
-			$json['previewImage'] = $this->file->CroppedImage(400, 133)->URL;
-			$json['detailImage'] = $this->file->getKickAssetsDetailImage()->URL;
+			$preview = $this->file->CroppedImage(400, 133);
+			$detail = $this->file->getKickAssetsDetailImage();
+			$json['previewImage'] = $preview ? $preview->URL : $this->file->getPreviewThumbnail(128, 128)->URL;
+			$json['detailImage'] = $detail ? $detail->URL : $this->file->getPreviewThumbnail(128, 128)->URL;
 		}
 
 		return $json;

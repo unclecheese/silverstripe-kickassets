@@ -591,7 +591,7 @@ class KickAssets extends LeftAndMain {
 	 * @return string
 	 */
 	protected function getSortClause($sort) {
-		$folder = "ClassName != 'Folder' ASC";
+		$folder = "Case \"File\".\"ClassName\" when 'Folder' then '0' else \"File\".\"ClassName\" end";
 		$case = "CASE WHEN ClassName='Folder' THEN '".self::FOLDER_EXTENSION."' ELSE SUBSTRING_INDEX(Filename,'.',-1) END";
 		
 		switch($sort) {

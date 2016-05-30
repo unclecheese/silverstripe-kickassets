@@ -543,7 +543,7 @@ class KickAssets extends LeftAndMain {
 		return array (
 			'id' => $file->ID,
 			'parentID' => $file->ParentID,
-			'title' => $file->Title,
+			'title' => ($file->Title) ? $file->Title : basename($file->Filename),
 			'filename' => basename($file->Filename),
 			'path' => $file->Filename,
 			'filesize' => $file->getAbsoluteSize(),

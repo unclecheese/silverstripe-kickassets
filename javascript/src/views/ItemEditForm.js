@@ -70,6 +70,8 @@ const ItemEditForm = React.createClass({
 
 		if(!title) title = <em>{_t('KickAssets.UNTITLED','Untitled')}</em>;
 
+		let editURL = "/admin/assets/EditForm/field/File/item/" + file.id + "/edit";
+
 		return (
 			<SidePanelContainer title={title}>
 				<FilePreviewContainer file={file} />
@@ -90,6 +92,7 @@ const ItemEditForm = React.createClass({
 						<FolderSearch disabled={!file.canEdit} currentFolder={file.folderName} onSelected={this.handleFolderSelect} />
 					</div>
 					<button type="submit" disabled={this.props.transaction !== 'DEFAULT' || !file.canEdit} className="btn btn-primary pull-right">{this.getButtonText()}</button>
+					<a href={editURL} target="_blank" className="btn btn-secondary pull-right">{_t('KickAssets.MOREOPTIONS','More options')}</a>
 				</form>
 			</SidePanelContainer>
 		);

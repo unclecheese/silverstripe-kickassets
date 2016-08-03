@@ -117,7 +117,7 @@ KickAssets is written in <a target="_blank" href="http://facebook.github.io/reac
 Then, run `npm install` in your `kickassets` module directory to install all of the dependencies.
 
 To start writing code, run:
-`webpack -watch`
+`webpack --watch`
 
 When finished, create a production bundle by setting an environment file and turning on minification.
 
@@ -126,7 +126,7 @@ When finished, create a production bundle by setting an environment file and tur
 If you would prefer not to install webpack globally, there are these handy npm scripts:
 
 - `npm run build` - Does a one time webpack build
-- `npm run build:watch` - Equivalent to `webpack -watch`
+- `npm run build:watch` - Equivalent to `webpack --watch`
 - `npm run build:prod` - Equivalent to `PROD=1 webpack -p`
 
 ## Troubleshooting

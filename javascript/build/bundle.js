@@ -56813,11 +56813,11 @@
 		},
 
 		handleMove: function handleMove(data) {
-			_actionsNavigation2['default'].goToMoveItems(_storesFolderItemsStore2['default'].get('folderID'), this.state.selected ? _storesSelectedItemsStore2['default'].get('data').toJS() : [data]);
+			_actionsNavigation2['default'].goToMoveItems(_storesFolderItemsStore2['default'].get('folderID'), this.state.selected ? _storesSelectedItemsStore2['default'].get('data').toJS() : [data.id]);
 		},
 
 		handleDelete: function handleDelete(data) {
-			var items = this.props.selected ? _storesSelectedItemsStore2['default'].column('id') : [data];
+			var items = this.props.selected ? _storesSelectedItemsStore2['default'].column('id') : [data.id];
 
 			_actionsActions2['default'].deleteItems(items);
 		},

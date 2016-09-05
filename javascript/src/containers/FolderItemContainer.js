@@ -82,13 +82,13 @@ const FolderItemContainer = React.createClass({
 	handleMove (data) {		
 		Navigation.goToMoveItems(
 			FolderItemsStore.get('folderID'),
-			this.state.selected ? SelectedItemsStore.get('data').toJS() : [data]
+			this.state.selected ? SelectedItemsStore.get('data').toJS() : [data.id]
 
 		);
 	},
 
 	handleDelete (data) {
-		const items = this.props.selected ? SelectedItemsStore.column('id') : [data];
+		const items = this.props.selected ? SelectedItemsStore.column('id') : [data.id];
 		
 		Actions.deleteItems(items);
 	},

@@ -59,7 +59,7 @@ const FolderItemContainer = React.createClass({
 		
 		if(this._lastToggle && (now - this._lastToggle < 300)) return;
 
-		Actions.toggleSelection(this.props.data.get('id'));
+		Actions.toggleSelection(this.props.data.get('id'));		
 		this._lastToggle = now;		
 	},
 

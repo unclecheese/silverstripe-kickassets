@@ -2,7 +2,9 @@ import React from 'react/addons';
 import Reflux from 'reflux';
 import SidePanelContainer from './SidePanelContainer';
 import FolderItemContainer from './FolderItemContainer';
+import SelectableGroup from '../views/SelectableGroup';
 import SearchStore from '../stores/SearchStore';
+import SelectedItemsStore from '../stores/SelectedItemsStore';
 import Router from 'react-router';
 import Actions from '../actions/Actions';
 import Loader from '../views/Loader';
@@ -11,7 +13,8 @@ import _t, {sf} from '../utils/lang';
 const getStoreState = () => {
 	return {
 		searchItems: SearchStore.get('data'),
-		loading: SearchStore.get('loading')
+		loading: SearchStore.get('loading'),
+		selectedItems: SelectedItemsStore.get('data')		
 	}
 };
 
@@ -32,7 +35,9 @@ const SearchPanelContainer = React.createClass({
 
 	componentDidMount () {
 		const term = this.props.routerParams.get('search');
-		this.listenTo(SearchStore, this.onSearchChanged);		
+		this.listenTo(SearchStore, this.onStoresChanged);
+		this.listenTo(SelectedItemsStore, this.onStoresChanged);
+
 		if(term) {		
 			Actions.search(term);
 		}
@@ -44,7 +49,7 @@ const SearchPanelContainer = React.createClass({
 		}
 	},
 
-	onSearchChanged () {
+	onStoresChanged () {
 		this.setState(getStoreState());
 	},
 
@@ -54,7 +59,15 @@ const SearchPanelContainer = React.createClass({
 	},
 
 	render () {
-		const items = this.state.searchItems;
+		const items = this.state.searchItems;		
+		const children = items.map(item => {
+			return <FolderItemContainer 
+				selected={this.state.selectedItems.contains(item)}
+				selectedCount={this.state.selectedItems.count()}
+				key={item.id} 
+				data={item} />
+		}).toJS();
+
 		return (
 			<SidePanelContainer title={sf(_t('KickAssets.SEARCHFOR','Search for %s'), this.getTermFromProps())}>
 				{() => {
@@ -66,9 +79,7 @@ const SearchPanelContainer = React.createClass({
 					}
 					return (
 						<div>
-							{items.map(item => {
-								return <FolderItemContainer key={item.id} data={item} />
-							})}
+							{children}
 						</div>
 					);					
 				}()}

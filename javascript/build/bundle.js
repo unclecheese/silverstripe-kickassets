@@ -58262,7 +58262,9 @@
 		_createClass(SelectableGroup, [{
 			key: 'componentDidMount',
 			value: function componentDidMount() {
-				_react2['default'].findDOMNode(this).addEventListener('mousedown', this._mouseDown);
+				if (this.props.allowBoxSelection) {
+					_react2['default'].findDOMNode(this).addEventListener('mousedown', this._mouseDown);
+				}
 			}
 
 			/**	 
@@ -58271,7 +58273,9 @@
 		}, {
 			key: 'componentWillUnmount',
 			value: function componentWillUnmount() {
-				_react2['default'].findDOMNode(this).removeEventListener('mousedown', this._mouseDown);
+				if (this.props.allowBoxSelection) {
+					_react2['default'].findDOMNode(this).removeEventListener('mousedown', this._mouseDown);
+				}
 			}
 
 			/**
@@ -58353,12 +58357,6 @@
 					float: 'left'
 				};
 
-				// {React.Children.map(this.props.children, child => {
-				// 	return React.cloneElement(child, {
-				// 		ref: `selectable__${child.key}`
-				// 	});
-				// })}
-
 				return _react2['default'].createElement(
 					this.props.component,
 					this.props,
@@ -58399,6 +58397,11 @@
 				tolerance: _react2['default'].PropTypes.number,
 
 				/**
+	    * If true, allow mouse lasso selection
+	    */
+				allowBoxSelection: _react2['default'].PropTypes.bool,
+
+				/**
 	    * An array of nodes representing selectable items
 	    * @type {[type]}
 	    */
@@ -58419,6 +58422,7 @@
 			key: 'defaultProps',
 			value: {
 				onSelection: noop,
+				allowBoxSelection: true,
 				component: 'div',
 				distance: 0,
 				tolerance: 0
@@ -61484,9 +61488,17 @@
 
 	var _FolderItemContainer2 = _interopRequireDefault(_FolderItemContainer);
 
+	var _viewsSelectableGroup = __webpack_require__(359);
+
+	var _viewsSelectableGroup2 = _interopRequireDefault(_viewsSelectableGroup);
+
 	var _storesSearchStore = __webpack_require__(367);
 
 	var _storesSearchStore2 = _interopRequireDefault(_storesSearchStore);
+
+	var _storesSelectedItemsStore = __webpack_require__(329);
+
+	var _storesSelectedItemsStore2 = _interopRequireDefault(_storesSelectedItemsStore);
 
 	var _reactRouter = __webpack_require__(157);
 
@@ -61507,7 +61519,8 @@
 	var getStoreState = function getStoreState() {
 		return {
 			searchItems: _storesSearchStore2['default'].get('data'),
-			loading: _storesSearchStore2['default'].get('loading')
+			loading: _storesSearchStore2['default'].get('loading'),
+			selectedItems: _storesSelectedItemsStore2['default'].get('data')
 		};
 	};
 
@@ -61526,7 +61539,9 @@
 
 		componentDidMount: function componentDidMount() {
 			var term = this.props.routerParams.get('search');
-			this.listenTo(_storesSearchStore2['default'], this.onSearchChanged);
+			this.listenTo(_storesSearchStore2['default'], this.onStoresChanged);
+			this.listenTo(_storesSelectedItemsStore2['default'], this.onStoresChanged);
+
 			if (term) {
 				_actionsActions2['default'].search(term);
 			}
@@ -61538,7 +61553,7 @@
 			}
 		},
 
-		onSearchChanged: function onSearchChanged() {
+		onStoresChanged: function onStoresChanged() {
 			this.setState(getStoreState());
 		},
 
@@ -61551,6 +61566,14 @@
 			var _this = this;
 
 			var items = this.state.searchItems;
+			var children = items.map(function (item) {
+				return _reactAddons2['default'].createElement(_FolderItemContainer2['default'], {
+					selected: _this.state.selectedItems.contains(item),
+					selectedCount: _this.state.selectedItems.count(),
+					key: item.id,
+					data: item });
+			}).toJS();
+
 			return _reactAddons2['default'].createElement(
 				_SidePanelContainer2['default'],
 				{ title: (0, _utilsLang.sf)((0, _utilsLang2['default'])('KickAssets.SEARCHFOR', 'Search for %s'), this.getTermFromProps()) },
@@ -61568,9 +61591,7 @@
 					return _reactAddons2['default'].createElement(
 						'div',
 						null,
-						items.map(function (item) {
-							return _reactAddons2['default'].createElement(_FolderItemContainer2['default'], { key: item.id, data: item });
-						})
+						children
 					);
 				})()
 			);

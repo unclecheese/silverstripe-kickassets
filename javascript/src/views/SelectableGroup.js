@@ -35,8 +35,12 @@ export default class SelectableGroup extends React.Component {
 		 * included.		 
 		 */
 		tolerance: React.PropTypes.number,
-		
 
+		/**
+		 * If true, allow mouse lasso selection
+		 */
+		allowBoxSelection: React.PropTypes.bool,
+		
 		/**
 		 * An array of nodes representing selectable items
 		 * @type {[type]}
@@ -57,6 +61,7 @@ export default class SelectableGroup extends React.Component {
 
 	static defaultProps = {
 		onSelection: noop,
+		allowBoxSelection: true,
 		component: 'div',
 		distance: 0,
 		tolerance: 0,
@@ -74,15 +79,19 @@ export default class SelectableGroup extends React.Component {
 
 
 	componentDidMount () {
-		React.findDOMNode(this).addEventListener('mousedown', this._mouseDown);		
+		if(this.props.allowBoxSelection) {
+			React.findDOMNode(this).addEventListener('mousedown', this._mouseDown);		
+		}
 	}
 	
 
 	/**	 
 	 * Remove global event listeners
 	 */
-	componentWillUnmount () {		
-		React.findDOMNode(this).removeEventListener('mousedown', this._mouseDown);		
+	componentWillUnmount () {
+		if(this.props.allowBoxSelection) {		
+			React.findDOMNode(this).removeEventListener('mousedown', this._mouseDown);
+		}
 	}
 
 
@@ -267,12 +276,6 @@ export default class SelectableGroup extends React.Component {
 			height: '100%',
 			float: 'left'			
 		};
-
-				// {React.Children.map(this.props.children, child => {
-				// 	return React.cloneElement(child, {
-				// 		ref: `selectable__${child.key}`
-				// 	});
-				// })}
 
 		return (
 			<this.props.component {...this.props}>				

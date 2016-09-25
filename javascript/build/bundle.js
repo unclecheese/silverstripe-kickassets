@@ -54783,7 +54783,9 @@
 
 			var error = undefined;
 
-			if (!_storesSelectedItemsStore2['default'].isValidCount()) {
+			if (items.length === 0) {
+				error = (0, _utilsLang.sf)((0, _utilsLang2['default'])('KickAssets.NOFILESELECTED', "You haven't selected any file."));
+			} else if (!_storesSelectedItemsStore2['default'].isValidCount()) {
 				error = (0, _utilsLang.sf)((0, _utilsLang2['default'])('KickAssets.TOOMANYSELECTED', 'You have selected too many items. Please select no more than %s.'), max);
 			} else if (!_storesSelectedItemsStore2['default'].isValidTypes()) {
 				error = (0, _utilsLang.sf)((0, _utilsLang2['default'])('KickAssets.INVALIDTYPESSELECTED', 'You have selected some invalid items. Please select only %s'), types.join(', '));

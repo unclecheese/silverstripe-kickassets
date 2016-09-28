@@ -45,7 +45,13 @@ const SelectionButtonContainer = React.createClass({
 
 		let error;
 
-		if(!SelectedItemsStore.isValidCount()) {
+		if(items.length === 0) {
+			error = sf(_t(
+				'KickAssets.NOFILESELECTED',
+				"You haven't selected any file."));
+		}
+
+		else if(!SelectedItemsStore.isValidCount()) {
 			error = sf(_t(
 				'KickAssets.TOOMANYSELECTED',
 				'You have selected too many items. Please select no more than %s.'

@@ -48,6 +48,7 @@ else {
 		'KickAssets.DONE': 'Færdig',
 		'KickAssets.TOOMANYSELECTED': 'Du har valgt for mange filer. Vælg ikke flere end %s.',
 		'KickAssets.INVALIDTYPESSELECTED': 'Du har valgt nogle ugyldige filer. Vælg kun %s',
-		'KickAssets.INVALIDEXTENSIONSSELECTED': 'Du har valgt nogle filer med ugyldige filtypenavne. Vælg kun %s'
+		'KickAssets.INVALIDEXTENSIONSSELECTED': 'Du har valgt nogle filer med ugyldige filtypenavne. Vælg kun %s',
+		'KickAssets.NOFILESELECTED': 'Du har ikke valgt nogen fil.'
 	});
 }

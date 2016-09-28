@@ -48,6 +48,7 @@ else {
 		'KickAssets.DONE': 'Fertig',
 		'KickAssets.TOOMANYSELECTED': 'Die haben zu viele Objekte ausgewählt. Bitte nicht mehr %s auswählen.',
 		'KickAssets.INVALIDTYPESSELECTED': 'Sie haben ungültige Objekte ausgewählt. Bitte nur %s auswählen.',
-		'KickAssets.INVALIDEXTENSIONSSELECTED': 'Sie haben Dateien mit ungültiger Dateienamenrweiterung ausgewählt. Bitte nur %s auswählen.'
+		'KickAssets.INVALIDEXTENSIONSSELECTED': 'Sie haben Dateien mit ungültiger Dateienamenrweiterung ausgewählt. Bitte nur %s auswählen.',
+		'KickAssets.NOFILESELECTED': 'Sie haben keine Datei ausgewählt.'
 	});
 }

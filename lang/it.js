@@ -2,7 +2,7 @@ if(typeof(ss) == 'undefined' || typeof(ss.i18n) == 'undefined') {
 	if(typeof(console) != 'undefined') console.error('Class ss.i18n not defined');
 } 
 else {
-	ss.i18n.addDictionary('en', {
+	ss.i18n.addDictionary('it', {
 		'Kickassets.ADDFILES': 'Aggiungi files...',
 		'KickAssets.DIDNTWORK': 'Oh beh, qualcosa è andato storto.',
 		'KickAssets.FILETOOBIG': 'File troppo grande. (%sMB). Massime dimensioni: %sMB',

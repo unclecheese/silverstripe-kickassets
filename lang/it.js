@@ -48,6 +48,7 @@ else {
 		'KickAssets.DONE': 'Fatto',
 		'KickAssets.TOOMANYSELECTED': 'Hai selezionato troppi elementi. Per piacere selezionane non più di %s.',
 		'KickAssets.INVALIDTYPESSELECTED': 'Alcuni elementi selezionati non sono validi. Per piacere seleziona solo %s',
-		'KickAssets.INVALIDEXTENSIONSSELECTED': 'Alcuni files selezionati hanno estensioni non valide. Per piacere seleziona solo %s'
+		'KickAssets.INVALIDEXTENSIONSSELECTED': 'Alcuni files selezionati hanno estensioni non valide. Per piacere seleziona solo %s',
+		'KickAssets.MOREOPTIONS': 'Altre opzioni'
 	});
 }

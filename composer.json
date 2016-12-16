@@ -1,5 +1,5 @@
 {
-    "name": "heyday/silverstripe-kickassets",
+    "name": "unclecheese/silverstripe-kickassets",
     "description": "Provides an alternative file management interface for SilverStripe CMS with drag-and-drop, multi-selection, and several other desktop-like UI conventions.",
     "type": "silverstripe-module",
     "keywords": ["silverstripe", "assets", "files", "AssetAdmin", "upload"],

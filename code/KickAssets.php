@@ -402,10 +402,13 @@ class KickAssets extends LeftAndMain {
 		if($r->getVar('search') === null) return;
 
 		$results = array ();
+		$searchTerm = $r->getVar('search');
 		$list = File::get()->filterAny(array(
-			'Title:PartialMatch' => $r->getVar('search'),
-			'Filename:PartialMatch' => $r->getVar('search')
+			'Title:PartialMatch' => $searchTerm,
+			'Filename:PartialMatch' => $searchTerm
 		))->limit(100);
+		
+		$this->extend('beforeHandleSearch', $list, $searchTerm);
 		
 		foreach($list as $item) {
 			if(!$item->canView()) continue;

@@ -142,6 +142,7 @@ class KickAssets extends LeftAndMain {
 			return $this->handleSearch($r);
 		}
 
+		HTTP::set_cache_age(0);
 		return $this->renderWith('KickAssets');
 	}
 
@@ -153,6 +154,7 @@ class KickAssets extends LeftAndMain {
 	 * @return SS_HTTPResponse
 	 */
 	public function handleFolderContents(SS_HTTPRequest $r) {
+		HTTP::set_cache_age(0);
 		if(!$r->param('FolderID')) {
 			$folder = Injector::inst()->get('Folder');
 			$folder->Filename = ASSETS_DIR;
@@ -228,7 +230,8 @@ class KickAssets extends LeftAndMain {
 				
 			}
 		}
-
+		
+		HTTP::set_cache_age(0);
     		return (new SS_HTTPResponse(
     			Convert::array2json($result), 200
     		))->addHeader('Content-Type', 'application/json');
@@ -320,7 +323,8 @@ class KickAssets extends LeftAndMain {
 				'filename' => $f->Filename
 			);
 		}
-
+		
+                HTTP::set_cache_age(0);
 		return (new SS_HTTPResponse(
 			Convert::array2json($response)
 		))->addHeader('Content-Type','application/json');		

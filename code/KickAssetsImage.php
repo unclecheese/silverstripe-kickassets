@@ -6,18 +6,19 @@
  * @package  unclecheese/silverstripe-kickassets
  * @author  Uncle Cheese <unclecheese@leftandmain.com>
  */
-class KickAssetsImage extends DataExtension {
+class KickAssetsImage extends DataExtension
+{
+    /**
+     * Returns an image properly formatted for the detail panel
+     * @return Image_Cached
+     */
+    public function getKickAssetsDetailImage()
+    {
+        if ($this->owner->getOrientation() === Image::ORIENTATION_PORTRAIT) {
+            return $this->owner->SetHeight(400);
+        }
 
-	/**
-	 * Returns an image properly formatted for the detail panel
-	 * @return Image_Cached
-	 */
-	public function getKickAssetsDetailImage() {
-		if($this->owner->getOrientation() === Image::ORIENTATION_PORTRAIT) {
-			return $this->owner->SetHeight(400);
-		}
-
-		return $this->owner->SetWidth(600);
-	}
+        return $this->owner->SetWidth(600);
+    }
 
 }

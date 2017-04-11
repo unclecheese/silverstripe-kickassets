@@ -123,7 +123,7 @@ class KickAssetsFileRequest extends RequestHandler
      */
     protected function buildJSON()
     {
-        $json = $this->parent->createFileJSON($this->file);
+        $json = $this->parent->createFileJson($this->file);
         $json['created'] = $this->file->obj('Created')->FormatFromSettings();
         $json['lastEdited'] = $this->file->obj('LastEdited')->FormatFromSettings();
         $json['url'] = $this->file->getAbsoluteURL();
@@ -150,8 +150,8 @@ class KickAssetsFileRequest extends RequestHandler
     protected function jsonResponse($json = null)
     {
         if (!$json) {
-            $json = $this->file instanceof Folder ? $this->parent->createFolderJSON($this->file)
-                : $this->parent->createFileJSON($this->file);
+            $json = $this->file instanceof Folder ? $this->parent->createFolderJson($this->file)
+                : $this->parent->createFileJson($this->file);
         }
 
         $response = new SS_HTTPResponse(

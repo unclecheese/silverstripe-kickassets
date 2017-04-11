@@ -7,7 +7,6 @@
  */
 class KickAssets extends LeftAndMain
 {
-
     /**
      * The size of the generic file icons, in pixels
      *
@@ -176,8 +175,8 @@ class KickAssets extends LeftAndMain
 
         $cursor = (int)$request->getVar('cursor');
         $result = array(
-            'folder' => $this->createFolderJSON($folder),
-            'breadcrumbs' => $this->createBreadcrumbJSON($folder),
+            'folder' => $this->createFolderJson($folder),
+            'breadcrumbs' => $this->createBreadcrumbJson($folder),
             'children' => array()
         );
 
@@ -196,8 +195,8 @@ class KickAssets extends LeftAndMain
             }
 
             $result['children'][] = ($file instanceof Folder) ?
-                $this->createFolderJSON($file) :
-                $this->createFileJSON($file, $folder);
+                $this->createFolderJson($file) :
+                $this->createFileJson($file, $folder);
         }
 
         $cursor += $files->count();
@@ -238,8 +237,8 @@ class KickAssets extends LeftAndMain
                 }
 
                 $result[] = ($file instanceof Folder) ?
-                    $this->createFolderJSON($file) :
-                    $this->createFileJSON($file);
+                    $this->createFolderJson($file) :
+                    $this->createFileJson($file);
 
             }
         }
@@ -305,7 +304,7 @@ class KickAssets extends LeftAndMain
         $record->write();
 
         $response = new SS_HTTPResponse(
-            Convert::array2json($this->createFolderJSON($record)), 200
+            Convert::array2json($this->createFolderJson($record)), 200
         );
 
         return $response->addHeader('Content-Type', 'application/json');
@@ -358,15 +357,15 @@ class KickAssets extends LeftAndMain
     /**
      * The endpoint for file uploads. Hands off to Dropzone module
      *
-     * @param  SS_HTTPRequest $r
+     * @param  SS_HTTPRequest $request
      * @return SS_HTTPResponse
      */
-    public function handleUpload(SS_HTTPRequest $r)
+    public function handleUpload(SS_HTTPRequest $request)
     {
-        $r->setUrl('upload');
+        $request->setUrl('upload');
 
         /** @var Folder $folder */
-        $folder = Folder::get()->byID($r->param('FolderID'));
+        $folder = Folder::get()->byID($request->param('FolderID'));
 
         /** @var FileAttachmentField $uploader */
         $uploader = FileAttachmentField::create('dummy');
@@ -378,7 +377,7 @@ class KickAssets extends LeftAndMain
         }
 
         /** @var SS_HTTPResponse $httpResponse */
-        $httpResponse = $uploader->handleRequest($r, DataModel::inst());
+        $httpResponse = $uploader->handleRequest($request, DataModel::inst());
 
         if ($httpResponse->getStatusCode() !== 200) {
             return $httpResponse;
@@ -389,7 +388,7 @@ class KickAssets extends LeftAndMain
         $result = array();
 
         foreach ($files as $f) {
-            $result[] = $this->createFileJSON($f, $folder);
+            $result[] = $this->createFileJson($f, $folder);
         }
 
         $response = new SS_HTTPResponse(
@@ -434,18 +433,18 @@ class KickAssets extends LeftAndMain
     /**
      * Searches for files by PartialMatch
      *
-     * @param  SS_HTTPRequest $r
+     * @param  SS_HTTPRequest $request
      * @return SS_HTTPResponse
      */
-    public function handleSearch(SS_HTTPRequest $r)
+    public function handleSearch(SS_HTTPRequest $request)
     {
 
-        if ($r->getVar('search') === null) {
+        if ($request->getVar('search') === null) {
             return null;
         }
 
         $result = array();
-        $searchTerm = $r->getVar('search');
+        $searchTerm = $request->getVar('search');
         $list = File::get()->filterAny(array(
             'Title:PartialMatch' => $searchTerm,
             'Filename:PartialMatch' => $searchTerm
@@ -457,7 +456,7 @@ class KickAssets extends LeftAndMain
             if (!$item->canView()) {
                 continue;
             }
-            $result[] = $item instanceof Folder ? $this->createFolderJSON($item) : $this->createFileJSON($item);
+            $result[] = $item instanceof Folder ? $this->createFolderJson($item) : $this->createFileJson($item);
         }
 
         $response = new SS_HTTPResponse(
@@ -472,7 +471,7 @@ class KickAssets extends LeftAndMain
      *
      * @return string
      */
-    public function JSONConfig()
+    public function jsonConfig()
     {
         $request = $this->request;
 
@@ -519,12 +518,12 @@ class KickAssets extends LeftAndMain
      * Moves a list of files ('ids') to a new folder ('newFolder' named file path or ID)
      * If newFolder is a string, the folder will be created if it doesn't exist.
      *
-     * @param  SS_HTTPRequest $r
+     * @param  SS_HTTPRequest $request
      * @return SS_HTTPResponse
      */
-    public function handleMove(SS_HTTPRequest $r)
+    public function handleMove(SS_HTTPRequest $request)
     {
-        parse_str($r->getBody(), $vars);
+        parse_str($request->getBody(), $vars);
 
         if (!isset($vars['ids'])) {
             return $this->httpError(400, 'No ids provided');
@@ -566,7 +565,7 @@ class KickAssets extends LeftAndMain
      * @param  Folder $folder
      * @return array
      */
-    public function createFolderJSON(Folder $folder)
+    public function createFolderJson(Folder $folder)
     {
         $size = self::ICON_SIZE;
         $file = Injector::inst()->get('File');
@@ -595,7 +594,7 @@ class KickAssets extends LeftAndMain
      * @param Folder $folder
      * @return array
      */
-    public function createFileJSON(File $file, $folder = null)
+    public function createFileJson(File $file, $folder = null)
     {
         $isImage = $file instanceof Image;
         $w = $isImage ? self::IMAGE_WIDTH : self::ICON_SIZE;
@@ -628,7 +627,7 @@ class KickAssets extends LeftAndMain
      * @param  Folder $folder
      * @return array
      */
-    protected function createBreadcrumbJSON(Folder $folder)
+    protected function createBreadcrumbJson(Folder $folder)
     {
         $breadcrumbs = array();
         while ($folder->exists()) {

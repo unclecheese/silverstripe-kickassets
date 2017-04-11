@@ -1,0 +1,11 @@
+Folder:
+  one:
+    Name: my-dummy-folder
+    Title: Dummy Folder
+    Filename: assets/my-dummy-folder
+
+Image:
+  one:
+    Name: dummy1.png
+    Title: Dummy File 1
+    Filename: assets/my-dummy-folder/dummy1.png

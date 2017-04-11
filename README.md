@@ -131,4 +131,10 @@ If you would prefer not to install webpack globally, there are these handy npm s
 
 ## Troubleshooting
 
+While in a developer environment and/or while PHP `E_NOTICE` is enabled, KickAssets will malfunction if your files aren't in sync.
+
+Thankfully, SilverStripe ships with a `BuildTask` that can resolve this. Head to `dev/tasks` and run the "Sync Files & Image Assets".
+
+or
+
 Ring Uncle Cheese.

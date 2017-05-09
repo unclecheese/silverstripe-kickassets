@@ -2,6 +2,7 @@ import Reflux from 'reflux';
 import Immutable from 'immutable';
 import ImmutableStoreMixin from '../mixins/ImmutableStoreMixin';
 import FolderItemsStore from './FolderItemsStore';
+import SearchStore from './SearchStore';
 import Actions from '../actions/Actions';
 import Config from './Config';
 
@@ -27,10 +28,10 @@ const SelectedItemsStore = Reflux.createStore({
 	onToggleSelection (id) {
 		const index = this.indexForID(id);
 		const found = (index > -1);
-		const folderItem = FolderItemsStore.getByID(id);
+		const folderItem = FolderItemsStore.getByID(id) || SearchStore.getByID(id)
 		let newData;
 
-		if(!folderItem) {			
+		if(!folderItem) {
 			return;			
 		}
 

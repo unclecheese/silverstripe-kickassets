@@ -64,7 +64,7 @@
 
 	var _pagesMain2 = _interopRequireDefault(_pagesMain);
 
-	var _pagesBrowse = __webpack_require__(344);
+	var _pagesBrowse = __webpack_require__(345);
 
 	var _pagesBrowse2 = _interopRequireDefault(_pagesBrowse);
 
@@ -23782,11 +23782,11 @@
 
 	var _viewsTopBar2 = _interopRequireDefault(_viewsTopBar);
 
-	var _viewsBrowseBar = __webpack_require__(332);
+	var _viewsBrowseBar = __webpack_require__(333);
 
 	var _viewsBrowseBar2 = _interopRequireDefault(_viewsBrowseBar);
 
-	var _Browse = __webpack_require__(344);
+	var _Browse = __webpack_require__(345);
 
 	var _Browse2 = _interopRequireDefault(_Browse);
 
@@ -54734,11 +54734,11 @@
 
 	var _storesConfig2 = _interopRequireDefault(_storesConfig);
 
-	var _classnames = __webpack_require__(330);
+	var _classnames = __webpack_require__(331);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
-	var _utilsSizeFormatter = __webpack_require__(331);
+	var _utilsSizeFormatter = __webpack_require__(332);
 
 	var _utilsSizeFormatter2 = _interopRequireDefault(_utilsSizeFormatter);
 
@@ -54861,6 +54861,10 @@
 
 	var _FolderItemsStore2 = _interopRequireDefault(_FolderItemsStore);
 
+	var _SearchStore = __webpack_require__(330);
+
+	var _SearchStore2 = _interopRequireDefault(_SearchStore);
+
 	var _actionsActions = __webpack_require__(308);
 
 	var _actionsActions2 = _interopRequireDefault(_actionsActions);
@@ -54891,7 +54895,7 @@
 		onToggleSelection: function onToggleSelection(id) {
 			var index = this.indexForID(id);
 			var found = index > -1;
-			var folderItem = _FolderItemsStore2['default'].getByID(id);
+			var folderItem = _FolderItemsStore2['default'].getByID(id) || _SearchStore2['default'].getByID(id);
 			var newData = undefined;
 
 			if (!folderItem) {
@@ -55013,6 +55017,72 @@
 /* 330 */
 /***/ function(module, exports, __webpack_require__) {
 
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+		value: true
+	});
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _reflux = __webpack_require__(221);
+
+	var _reflux2 = _interopRequireDefault(_reflux);
+
+	var _actionsActions = __webpack_require__(308);
+
+	var _actionsActions2 = _interopRequireDefault(_actionsActions);
+
+	var _actionsNavigation = __webpack_require__(241);
+
+	var _actionsNavigation2 = _interopRequireDefault(_actionsNavigation);
+
+	var _immutable = __webpack_require__(322);
+
+	var _immutable2 = _interopRequireDefault(_immutable);
+
+	var _mixinsImmutableStoreMixin = __webpack_require__(323);
+
+	var _mixinsImmutableStoreMixin2 = _interopRequireDefault(_mixinsImmutableStoreMixin);
+
+	var _state = {
+		term: null,
+		data: _immutable2['default'].List(),
+		loading: false
+	};
+
+	var SearchStore = _reflux2['default'].createStore({
+
+		listenables: [_actionsActions2['default'], _actionsNavigation2['default']],
+
+		mixins: [(0, _mixinsImmutableStoreMixin2['default'])(_state)],
+
+		onGoToFolder: function onGoToFolder() {
+			_state.term = null;
+			_state.data = _state.data.clear();
+		},
+
+		onSearch: function onSearch(term) {
+			_state.loading = true;
+			_state.term = term;
+			this.trigger();
+		},
+
+		onSearchCompleted: function onSearchCompleted(data) {
+			_state.loading = false;
+			this.replace('data', data);
+
+			this.trigger();
+		}
+	});
+
+	exports['default'] = SearchStore;
+	module.exports = exports['default'];
+
+/***/ },
+/* 331 */
+/***/ function(module, exports, __webpack_require__) {
+
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 	  Copyright (c) 2015 Jed Watson.
 	  Licensed under the MIT License (MIT), see
@@ -55064,7 +55134,7 @@
 
 
 /***/ },
-/* 331 */
+/* 332 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -55085,7 +55155,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 332 */
+/* 333 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -55104,7 +55174,7 @@
 
 	var _reflux2 = _interopRequireDefault(_reflux);
 
-	var _containersBreadcrumbsContainer = __webpack_require__(333);
+	var _containersBreadcrumbsContainer = __webpack_require__(334);
 
 	var _containersBreadcrumbsContainer2 = _interopRequireDefault(_containersBreadcrumbsContainer);
 
@@ -55116,15 +55186,15 @@
 
 	var _storesConfig2 = _interopRequireDefault(_storesConfig);
 
-	var _storesBreadcrumbsStore = __webpack_require__(334);
+	var _storesBreadcrumbsStore = __webpack_require__(335);
 
 	var _storesBreadcrumbsStore2 = _interopRequireDefault(_storesBreadcrumbsStore);
 
-	var _storesUIStore = __webpack_require__(337);
+	var _storesUIStore = __webpack_require__(338);
 
 	var _storesUIStore2 = _interopRequireDefault(_storesUIStore);
 
-	var _containersFolderSearch = __webpack_require__(338);
+	var _containersFolderSearch = __webpack_require__(339);
 
 	var _containersFolderSearch2 = _interopRequireDefault(_containersFolderSearch);
 
@@ -55138,11 +55208,11 @@
 
 	var _reactBootstrap = __webpack_require__(243);
 
-	var _DelayedRender = __webpack_require__(342);
+	var _DelayedRender = __webpack_require__(343);
 
 	var _DelayedRender2 = _interopRequireDefault(_DelayedRender);
 
-	var _utilsNodeInRoot = __webpack_require__(343);
+	var _utilsNodeInRoot = __webpack_require__(344);
 
 	var _utilsNodeInRoot2 = _interopRequireDefault(_utilsNodeInRoot);
 
@@ -55312,7 +55382,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 333 */
+/* 334 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -55335,11 +55405,11 @@
 
 	var _actionsNavigation2 = _interopRequireDefault(_actionsNavigation);
 
-	var _storesBreadcrumbsStore = __webpack_require__(334);
+	var _storesBreadcrumbsStore = __webpack_require__(335);
 
 	var _storesBreadcrumbsStore2 = _interopRequireDefault(_storesBreadcrumbsStore);
 
-	var _viewsBreadcrumbs = __webpack_require__(335);
+	var _viewsBreadcrumbs = __webpack_require__(336);
 
 	var _viewsBreadcrumbs2 = _interopRequireDefault(_viewsBreadcrumbs);
 
@@ -55382,7 +55452,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 334 */
+/* 335 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -55458,7 +55528,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 335 */
+/* 336 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -55473,7 +55543,7 @@
 
 	var _reactAddons2 = _interopRequireDefault(_reactAddons);
 
-	var _Truncator = __webpack_require__(336);
+	var _Truncator = __webpack_require__(337);
 
 	var _Truncator2 = _interopRequireDefault(_Truncator);
 
@@ -55561,7 +55631,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 336 */
+/* 337 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -55623,7 +55693,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 337 */
+/* 338 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -55680,7 +55750,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 338 */
+/* 339 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -55701,15 +55771,15 @@
 
 	var _reflux2 = _interopRequireDefault(_reflux);
 
-	var _viewsAutoComplete = __webpack_require__(339);
+	var _viewsAutoComplete = __webpack_require__(340);
 
 	var _viewsAutoComplete2 = _interopRequireDefault(_viewsAutoComplete);
 
-	var _storesFolderListStore = __webpack_require__(340);
+	var _storesFolderListStore = __webpack_require__(341);
 
 	var _storesFolderListStore2 = _interopRequireDefault(_storesFolderListStore);
 
-	var _utilsEscapeRegExp = __webpack_require__(341);
+	var _utilsEscapeRegExp = __webpack_require__(342);
 
 	var _utilsEscapeRegExp2 = _interopRequireDefault(_utilsEscapeRegExp);
 
@@ -55769,7 +55839,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 339 */
+/* 340 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -55790,7 +55860,7 @@
 
 	var _reactBootstrap2 = _interopRequireDefault(_reactBootstrap);
 
-	var _Truncator = __webpack_require__(336);
+	var _Truncator = __webpack_require__(337);
 
 	var _Truncator2 = _interopRequireDefault(_Truncator);
 
@@ -56058,7 +56128,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 340 */
+/* 341 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -56118,7 +56188,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 341 */
+/* 342 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -56135,7 +56205,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 342 */
+/* 343 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -56203,7 +56273,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 343 */
+/* 344 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -56226,7 +56296,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 344 */
+/* 345 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -56245,11 +56315,11 @@
 
 	var _reflux2 = _interopRequireDefault(_reflux);
 
-	var _viewsFolderItemList = __webpack_require__(345);
+	var _viewsFolderItemList = __webpack_require__(346);
 
 	var _viewsFolderItemList2 = _interopRequireDefault(_viewsFolderItemList);
 
-	var _containersDropzoneContainer = __webpack_require__(363);
+	var _containersDropzoneContainer = __webpack_require__(364);
 
 	var _containersDropzoneContainer2 = _interopRequireDefault(_containersDropzoneContainer);
 
@@ -56265,7 +56335,7 @@
 
 	var _storesFolderItemsStore2 = _interopRequireDefault(_storesFolderItemsStore);
 
-	var _storesFileDetailStore = __webpack_require__(366);
+	var _storesFileDetailStore = __webpack_require__(367);
 
 	var _storesFileDetailStore2 = _interopRequireDefault(_storesFileDetailStore);
 
@@ -56273,11 +56343,11 @@
 
 	var _storesFolderDataStore2 = _interopRequireDefault(_storesFolderDataStore);
 
-	var _storesSearchStore = __webpack_require__(367);
+	var _storesSearchStore = __webpack_require__(330);
 
 	var _storesSearchStore2 = _interopRequireDefault(_storesSearchStore);
 
-	var _storesUIStore = __webpack_require__(337);
+	var _storesUIStore = __webpack_require__(338);
 
 	var _storesUIStore2 = _interopRequireDefault(_storesUIStore);
 
@@ -56402,7 +56472,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 345 */
+/* 346 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -56425,27 +56495,27 @@
 
 	var _actionsActions2 = _interopRequireDefault(_actionsActions);
 
-	var _containersFolderItemContainer = __webpack_require__(346);
+	var _containersFolderItemContainer = __webpack_require__(347);
 
 	var _containersFolderItemContainer2 = _interopRequireDefault(_containersFolderItemContainer);
 
-	var _containersListViewHeaderContainer = __webpack_require__(351);
+	var _containersListViewHeaderContainer = __webpack_require__(352);
 
 	var _containersListViewHeaderContainer2 = _interopRequireDefault(_containersListViewHeaderContainer);
 
-	var _FullHeightScroller = __webpack_require__(354);
+	var _FullHeightScroller = __webpack_require__(355);
 
 	var _FullHeightScroller2 = _interopRequireDefault(_FullHeightScroller);
 
-	var _LazyLoadList = __webpack_require__(355);
+	var _LazyLoadList = __webpack_require__(356);
 
 	var _LazyLoadList2 = _interopRequireDefault(_LazyLoadList);
 
-	var _utilsScrollToElement = __webpack_require__(357);
+	var _utilsScrollToElement = __webpack_require__(358);
 
 	var _utilsScrollToElement2 = _interopRequireDefault(_utilsScrollToElement);
 
-	var _utilsIsElementInView = __webpack_require__(358);
+	var _utilsIsElementInView = __webpack_require__(359);
 
 	var _utilsIsElementInView2 = _interopRequireDefault(_utilsIsElementInView);
 
@@ -56453,7 +56523,7 @@
 
 	var _immutable2 = _interopRequireDefault(_immutable);
 
-	var _storesDragAndDropStore = __webpack_require__(347);
+	var _storesDragAndDropStore = __webpack_require__(348);
 
 	var _storesDragAndDropStore2 = _interopRequireDefault(_storesDragAndDropStore);
 
@@ -56465,11 +56535,11 @@
 
 	var _storesFolderItemsStore2 = _interopRequireDefault(_storesFolderItemsStore);
 
-	var _viewsSelectableGroup = __webpack_require__(359);
+	var _viewsSelectableGroup = __webpack_require__(360);
 
 	var _viewsSelectableGroup2 = _interopRequireDefault(_viewsSelectableGroup);
 
-	var _Loader = __webpack_require__(362);
+	var _Loader = __webpack_require__(363);
 
 	var _Loader2 = _interopRequireDefault(_Loader);
 
@@ -56699,7 +56769,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 346 */
+/* 347 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -56740,11 +56810,11 @@
 
 	var _storesSelectedItemsStore2 = _interopRequireDefault(_storesSelectedItemsStore);
 
-	var _storesDragAndDropStore = __webpack_require__(347);
+	var _storesDragAndDropStore = __webpack_require__(348);
 
 	var _storesDragAndDropStore2 = _interopRequireDefault(_storesDragAndDropStore);
 
-	var _viewsFolderItem = __webpack_require__(348);
+	var _viewsFolderItem = __webpack_require__(349);
 
 	var _viewsFolderItem2 = _interopRequireDefault(_viewsFolderItem);
 
@@ -56937,7 +57007,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 347 */
+/* 348 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -57011,7 +57081,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 348 */
+/* 349 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -57028,21 +57098,21 @@
 
 	var _reactAddons2 = _interopRequireDefault(_reactAddons);
 
-	var _Truncator = __webpack_require__(336);
+	var _Truncator = __webpack_require__(337);
 
 	var _Truncator2 = _interopRequireDefault(_Truncator);
 
-	var _classnames = __webpack_require__(330);
+	var _classnames = __webpack_require__(331);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
 	var _reactBootstrap = __webpack_require__(243);
 
-	var _FolderItemImage = __webpack_require__(349);
+	var _FolderItemImage = __webpack_require__(350);
 
 	var _FolderItemImage2 = _interopRequireDefault(_FolderItemImage);
 
-	var _ErrorOverlay = __webpack_require__(350);
+	var _ErrorOverlay = __webpack_require__(351);
 
 	var _ErrorOverlay2 = _interopRequireDefault(_ErrorOverlay);
 
@@ -57430,7 +57500,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 349 */
+/* 350 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -57494,7 +57564,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 350 */
+/* 351 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -57561,7 +57631,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 351 */
+/* 352 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -57580,7 +57650,7 @@
 
 	var _reflux2 = _interopRequireDefault(_reflux);
 
-	var _viewsListViewHeader = __webpack_require__(352);
+	var _viewsListViewHeader = __webpack_require__(353);
 
 	var _viewsListViewHeader2 = _interopRequireDefault(_viewsListViewHeader);
 
@@ -57612,7 +57682,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 352 */
+/* 353 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -57627,7 +57697,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _ListViewColumn = __webpack_require__(353);
+	var _ListViewColumn = __webpack_require__(354);
 
 	var _ListViewColumn2 = _interopRequireDefault(_ListViewColumn);
 
@@ -57674,7 +57744,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 353 */
+/* 354 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -57746,7 +57816,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 354 */
+/* 355 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -57832,7 +57902,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 355 */
+/* 356 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -57847,7 +57917,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _LazyLoad = __webpack_require__(356);
+	var _LazyLoad = __webpack_require__(357);
 
 	var _LazyLoad2 = _interopRequireDefault(_LazyLoad);
 
@@ -57926,7 +57996,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 356 */
+/* 357 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -57937,7 +58007,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _classnames = __webpack_require__(330);
+	var _classnames = __webpack_require__(331);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
@@ -58024,7 +58094,7 @@
 	module.exports = LazyLoad;
 
 /***/ },
-/* 357 */
+/* 358 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -58087,7 +58157,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 358 */
+/* 359 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -58115,7 +58185,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 359 */
+/* 360 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -58138,15 +58208,15 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _utilsNodeInRoot = __webpack_require__(343);
+	var _utilsNodeInRoot = __webpack_require__(344);
 
 	var _utilsNodeInRoot2 = _interopRequireDefault(_utilsNodeInRoot);
 
-	var _utilsGetBoundsForNode = __webpack_require__(360);
+	var _utilsGetBoundsForNode = __webpack_require__(361);
 
 	var _utilsGetBoundsForNode2 = _interopRequireDefault(_utilsGetBoundsForNode);
 
-	var _utilsDoObjectsCollide = __webpack_require__(361);
+	var _utilsDoObjectsCollide = __webpack_require__(362);
 
 	var _utilsDoObjectsCollide2 = _interopRequireDefault(_utilsDoObjectsCollide);
 
@@ -58452,7 +58522,7 @@
 	 */
 
 /***/ },
-/* 360 */
+/* 361 */
 /***/ function(module, exports) {
 
 	/**
@@ -58480,7 +58550,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 361 */
+/* 362 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -58491,7 +58561,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _getBoundsForNode = __webpack_require__(360);
+	var _getBoundsForNode = __webpack_require__(361);
 
 	var _getBoundsForNode2 = _interopRequireDefault(_getBoundsForNode);
 
@@ -58541,7 +58611,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 362 */
+/* 363 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -58556,7 +58626,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _DelayedRender = __webpack_require__(342);
+	var _DelayedRender = __webpack_require__(343);
 
 	var _DelayedRender2 = _interopRequireDefault(_DelayedRender);
 
@@ -58613,7 +58683,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 363 */
+/* 364 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -58632,7 +58702,7 @@
 
 	var _reflux2 = _interopRequireDefault(_reflux);
 
-	var _viewsDropzone = __webpack_require__(364);
+	var _viewsDropzone = __webpack_require__(365);
 
 	var _viewsDropzone2 = _interopRequireDefault(_viewsDropzone);
 
@@ -58644,7 +58714,7 @@
 
 	var _actionsActions2 = _interopRequireDefault(_actionsActions);
 
-	var _storesDragAndDropStore = __webpack_require__(347);
+	var _storesDragAndDropStore = __webpack_require__(348);
 
 	var _storesDragAndDropStore2 = _interopRequireDefault(_storesDragAndDropStore);
 
@@ -58800,7 +58870,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 364 */
+/* 365 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -58815,7 +58885,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _dropzone = __webpack_require__(365);
+	var _dropzone = __webpack_require__(366);
 
 	var _dropzone2 = _interopRequireDefault(_dropzone);
 
@@ -58903,7 +58973,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 365 */
+/* 366 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {
@@ -60662,7 +60732,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(319)(module)))
 
 /***/ },
-/* 366 */
+/* 367 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -60697,7 +60767,7 @@
 
 	var _FolderItemsStore2 = _interopRequireDefault(_FolderItemsStore);
 
-	var _FolderListStore = __webpack_require__(340);
+	var _FolderListStore = __webpack_require__(341);
 
 	var _FolderListStore2 = _interopRequireDefault(_FolderListStore);
 
@@ -60782,72 +60852,6 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 367 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-		value: true
-	});
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	var _reflux = __webpack_require__(221);
-
-	var _reflux2 = _interopRequireDefault(_reflux);
-
-	var _actionsActions = __webpack_require__(308);
-
-	var _actionsActions2 = _interopRequireDefault(_actionsActions);
-
-	var _actionsNavigation = __webpack_require__(241);
-
-	var _actionsNavigation2 = _interopRequireDefault(_actionsNavigation);
-
-	var _immutable = __webpack_require__(322);
-
-	var _immutable2 = _interopRequireDefault(_immutable);
-
-	var _mixinsImmutableStoreMixin = __webpack_require__(323);
-
-	var _mixinsImmutableStoreMixin2 = _interopRequireDefault(_mixinsImmutableStoreMixin);
-
-	var _state = {
-		term: null,
-		data: _immutable2['default'].List(),
-		loading: false
-	};
-
-	var SearchStore = _reflux2['default'].createStore({
-
-		listenables: [_actionsActions2['default'], _actionsNavigation2['default']],
-
-		mixins: [(0, _mixinsImmutableStoreMixin2['default'])(_state)],
-
-		onGoToFolder: function onGoToFolder() {
-			_state.term = null;
-			_state.data = _state.data.clear();
-		},
-
-		onSearch: function onSearch(term) {
-			_state.loading = true;
-			_state.term = term;
-			this.trigger();
-		},
-
-		onSearchCompleted: function onSearchCompleted(data) {
-			_state.loading = false;
-			this.replace('data', data);
-
-			this.trigger();
-		}
-	});
-
-	exports['default'] = SearchStore;
-	module.exports = exports['default'];
-
-/***/ },
 /* 368 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -60875,7 +60879,7 @@
 
 	var _actionsNavigation2 = _interopRequireDefault(_actionsNavigation);
 
-	var _storesFileDetailStore = __webpack_require__(366);
+	var _storesFileDetailStore = __webpack_require__(367);
 
 	var _storesFileDetailStore2 = _interopRequireDefault(_storesFileDetailStore);
 
@@ -60990,7 +60994,7 @@
 
 	var _containersSidePanelContainer2 = _interopRequireDefault(_containersSidePanelContainer);
 
-	var _containersFolderSearch = __webpack_require__(338);
+	var _containersFolderSearch = __webpack_require__(339);
 
 	var _containersFolderSearch2 = _interopRequireDefault(_containersFolderSearch);
 
@@ -61148,7 +61152,7 @@
 
 	var _viewsFilePreview2 = _interopRequireDefault(_viewsFilePreview);
 
-	var _viewsDropzone = __webpack_require__(364);
+	var _viewsDropzone = __webpack_require__(365);
 
 	var _viewsDropzone2 = _interopRequireDefault(_viewsDropzone);
 
@@ -61415,11 +61419,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _FullHeightScroller = __webpack_require__(354);
+	var _FullHeightScroller = __webpack_require__(355);
 
 	var _FullHeightScroller2 = _interopRequireDefault(_FullHeightScroller);
 
-	var _Truncator = __webpack_require__(336);
+	var _Truncator = __webpack_require__(337);
 
 	var _Truncator2 = _interopRequireDefault(_Truncator);
 
@@ -61486,15 +61490,15 @@
 
 	var _SidePanelContainer2 = _interopRequireDefault(_SidePanelContainer);
 
-	var _FolderItemContainer = __webpack_require__(346);
+	var _FolderItemContainer = __webpack_require__(347);
 
 	var _FolderItemContainer2 = _interopRequireDefault(_FolderItemContainer);
 
-	var _viewsSelectableGroup = __webpack_require__(359);
+	var _viewsSelectableGroup = __webpack_require__(360);
 
 	var _viewsSelectableGroup2 = _interopRequireDefault(_viewsSelectableGroup);
 
-	var _storesSearchStore = __webpack_require__(367);
+	var _storesSearchStore = __webpack_require__(330);
 
 	var _storesSearchStore2 = _interopRequireDefault(_storesSearchStore);
 
@@ -61510,7 +61514,7 @@
 
 	var _actionsActions2 = _interopRequireDefault(_actionsActions);
 
-	var _viewsLoader = __webpack_require__(362);
+	var _viewsLoader = __webpack_require__(363);
 
 	var _viewsLoader2 = _interopRequireDefault(_viewsLoader);
 
@@ -61628,7 +61632,7 @@
 
 	var _SidePanelContainer2 = _interopRequireDefault(_SidePanelContainer);
 
-	var _FolderItemContainer = __webpack_require__(346);
+	var _FolderItemContainer = __webpack_require__(347);
 
 	var _FolderItemContainer2 = _interopRequireDefault(_FolderItemContainer);
 
@@ -61644,7 +61648,7 @@
 
 	var _actionsActions2 = _interopRequireDefault(_actionsActions);
 
-	var _containersFolderSearch = __webpack_require__(338);
+	var _containersFolderSearch = __webpack_require__(339);
 
 	var _containersFolderSearch2 = _interopRequireDefault(_containersFolderSearch);
 
@@ -61654,7 +61658,7 @@
 
 	var _actionsNavigation2 = _interopRequireDefault(_actionsNavigation);
 
-	var _viewsFolderItemImage = __webpack_require__(349);
+	var _viewsFolderItemImage = __webpack_require__(350);
 
 	var _viewsFolderItemImage2 = _interopRequireDefault(_viewsFolderItemImage);
 

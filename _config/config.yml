@@ -17,6 +17,8 @@ LeftAndMain:
   extra_requirements_javascript: ['kickassets/javascript/kickassets-cms.js']
 UploadField:
   extensions: ['KickAssetsUploadField']
+GridFieldBulkUpload_Request:
+  extensions: ['KickAssetsGridFieldBulkUpload_Request']
 ---
 Only:
   environment: dev

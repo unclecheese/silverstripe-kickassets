@@ -11,7 +11,7 @@ else {
 		'KickAssets.MOVEITEMSTO': 'Flyt %s fil(er) til:',
 		'KickAssets.FOLDERNOTEXIST': 'Denne folder eksisterer ikke. Den vil nu blive lavet.',
 		'KickAssets.MOVEITEMS': 'Flyt %s filer',
-		'KickAssets.SEARCHFOR': 'Søf efter %s',
+		'KickAssets.SEARCHFOR': 'Søg efter %s',
         'KickAssets.GENERICERROR': '<p>Du har muligvis fundet en fejl.</p><p>Hvis du har oplevet et problem med dette modul, <a href=\"http://github.com/unclecheese/silverstripe-kickassets\">opret en issue på Github siden.</a></p>',
 		'KickAssets.SORTTITLEAZ': 'Titel: A-Z',
 		'KickAssets.SORTTITLEZA': 'Titel Z-A',
